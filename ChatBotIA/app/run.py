@@ -25,6 +25,10 @@ class MainApp:
         self.netOff = ""
         self.vpnOff = ""
         self.pageOff = ""
+        # váriaveis das opções de acessos:
+        self.retorno_acessos = ""
+        self.changePass = ""
+        self.unblockPass = ""
         # váriaveis das opções de totvs:
         self.retorno_totvs = ""        
         self.uslock = "" # 1
@@ -39,19 +43,20 @@ class MainApp:
                 if nova_msg != "sair":
                     if nova_msg is not None and nova_msg != self.msg:
                         self.msg = nova_msg
-                        if self.msg is not None and self.retorno_suporte == "" and self.retorno_totvs == "" and self.retorno_rede == "":
+                        
+                        if self.msg is not None and self.retorno_suporte == "" and self.retorno_totvs == "" and self.retorno_rede == "" and self.retorno_acessos == "":
                             
-                            if self.msg is not None and self.msg == "help":
+                            if self.msg == "help":
                                 self.menu.show_menu()
-                            elif self.msg is not None and self.msg == "sair":
+                            elif self.msg == "sair":
                                 self.menu.sair()
-                            elif self.msg is not None and self.msg == "suporte":
+                            elif self.msg == "suporte":
                                 self.retorno_suporte = self.menu.suporte()
-                            elif self.msg is not None and self.msg == "rede":
+                            elif self.msg == "rede":
                                 self.retorno_rede = self.menu.rede()
-                            elif self.msg is not None and self.msg == "acessos":
-                                self.menu.acessos()
-                            elif self.msg is not None and self.msg == "totvs":
+                            elif self.msg == "acessos":
+                                self.retorno_acessos = self.menu.acessos()
+                            elif self.msg == "totvs":
                                 self.retorno_totvs = self.menu.totvs()
                             else:
                                 self.bot.envia_msg('Desculpe não entendi, por gentileza digite uma opção válida.')
@@ -59,17 +64,20 @@ class MainApp:
                         # -----------------------------------------------------------------------------------------------------
                         # Caso suporte mostre as opções:           
                         elif self.msg is not None and self.retorno_suporte == "1" and self.imp == "":
+                            
                             if self.msg == "1":
                                 self.imp = self.menu.suporte_impressora()
                             elif self.msg == "2":
                                 self.menu.pc_nao_liga()
+                            elif self.msg == "3":
+                                self.menu.install_soft()
                             elif self.msg == "help" or self.msg == "sair":
                                 self.retorno_suporte = ""
                             else:
                                 self.bot.envia_msg('Desculpe não entendi, por gentileza digite uma opção válida.')
                         
                         # Envia para openai a mensagem do usuário e depois envia a mensagem de resposta da openai         
-                        elif self.msg is not None and self.retorno_suporte == "1" and self.imp == "1":
+                        elif self.msg is not None and self.retorno_suporte == "1" and self.imp == "1":                            
                             nova_msg = ""
                             while self.msg != "sair" and nova_msg is not None and nova_msg != self.msg:                    
                                 msg = self.msg
@@ -83,6 +91,7 @@ class MainApp:
                         # -----------------------------------------------------------------------------------------------------
                         # Caso rede mostre as opções:           
                         elif self.msg is not None and self.retorno_rede == "1" and self.netOff == "" and self.vpnOff == "" and self.pageOff == "":
+                            
                             if self.msg == "1":
                                 self.netOff = self.menu.net_off()
                             elif self.msg == "2":
@@ -105,10 +114,26 @@ class MainApp:
                                     self.bot.envia_msg(resposta_testUrl)
                                     nova_msg = self.bot.ultima_msg()
                                     self.msg = nova_msg
+                                    
+                        # -----------------------------------------------------------------------------------------------------
+                        # Caso acessos mostre as opções:           
+                        elif self.msg is not None and self.retorno_acessos == "1" and self.changePass == "" and self.unblockPass == "":
+                            
+                            if self.msg == "1":
+                                self.changePass = self.menu.change_pass()
+                            elif self.msg == "2":
+                                self.unblockPass = self.menu.unblock_pass()
+                            elif self.msg == "3":
+                                self.menu.pc_nao_liga()                            
+                            elif self.msg == "help" or self.msg == "sair":
+                                self.retorno_suporte = ""
+                            else:
+                                self.bot.envia_msg('Desculpe não entendi, por gentileza digite uma opção válida.')
                         
                         # -----------------------------------------------------------------------------------------------------
                         # Caso totvs mostre as opções:            
                         elif self.msg is not None and self.retorno_totvs == "1" and self.rError == "":
+                            
                             if self.msg == "1":
                                 self.uslock = self.menu.user_lock()
                             elif self.msg == "2":

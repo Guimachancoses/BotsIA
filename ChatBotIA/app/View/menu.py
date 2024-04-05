@@ -23,6 +23,7 @@ class Menu:
         self.bot.envia_msg("""GuiBot: Esse é um texto com os comandos válidos:
                         ⚫ 1  (problema com a impressora)
                         ⚫ 2  (computador não liga)
+                        ⚫ 3  (instalação de software)
                         ⚫  help (voltar ao menu)
                         ❌  sair (para encerrar) \n Digite uma das opções.""")
         return suporte
@@ -36,8 +37,14 @@ class Menu:
     # Caso escolha em suporte for 2:
     def pc_nao_liga(self):
         pcOff = "1"
-        self.bot.envia_msg("Entendo, vou direcionálo para um de nossos técnicos.")
+        self.bot.envia_msg("Entendo, seu computador não está ligando.\nVou direcionálo para um de nossos técnicos.")
         return pcOff
+    
+    # Caso escolha em suporte for 3:
+    def install_soft(self):
+        installsoft = "1"
+        self.bot.envia_msg("Entendo, você deseja instalar um software em sua máquina.\nVou direcionálo para um de nossos técnicos.")
+        return installsoft
 
     #--------------------------------------------------------------------------------------------------------------------------------------
     #----------------------------------------------------------REDE------------------------------------------------------------------------
@@ -78,9 +85,61 @@ class Menu:
         self.bot.envia_msg("""GuiBot: Esse é um texto com os comandos válidos:
                         ⚫ 1  (troca de senha)
                         ⚫ 2  (desbloqueio ou liberação)
+                        ⚫ 3  (bloqueio de usuário)
                         ⚫  help (voltar ao menu)
                         ❌  sair (para encerrar)\n Digite uma das opções.""")
         return acesssos
+    
+    # Caso a escolha em acessos for 1:
+    def change_pass(self):
+        changePass = "1"
+        self.bot.envia_msg("Entendo, você deseja aterar sua seunha.\nPor gentileza informe qual a plataforma que você deseja efetuar a troca de senha.")
+        return changePass
+    
+    # Caso a escolha em acessos for 2:
+    def unblock_pass(self):
+        unblockPass = "1"
+        self.bot.envia_msg("Entendo, você deseja aterar sua seunha.\nPor gentileza informe qual a plataforma que você deseja efetuar a troca de senha.")
+        return 
+    
+    # Caso a escolha em acessos for 3:
+    def block_user1(self):
+        blockUser = "1"
+        self.bot.envia_msg("Entendo, você deseja bloquear um usuário.\nEssa função requer um nível de usuário.\nPor gentileza informe seu nome completo.")
+        return blockUser
+    
+    def block_user2(self):
+        blockUser2 = "1"
+        self.bot.envia_msg("Agora informe sua senha.")
+        return blockUser2
+       
+    def block_user3(self):
+        blockUser3 = "1"
+        self.bot.envia_msg("Informe o nome completo do usuário que você deseja bloquear.")
+        return blockUser3
+    
+    def block_user4(self):
+        blockUser4 = "1"
+        self.bot.envia_msg("Informe o motivo que você deseja bloquear o usuário.")
+        return blockUser4
+    
+    def block_user5(self):
+        blockUser5 = "1"
+        self.bot.envia_msg("""Certo, se você deseja agendar um bloqueio?
+                            \nDigite 'agendar'.
+                            \nOu se você deseja bloquear o usuário agora?
+                            \nDigite 'bloquear'.""")
+        return blockUser5
+    
+    def block_user6(self):
+        blockUser6 = "1"
+        self.bot.envia_msg("Entendo, para agendar um bloqueio.\nVou encaminhar sua solicitação para o setor do T.I.")
+        return blockUser6
+    
+    def block_user7(self):
+        blockUser7 = "1"
+        self.bot.envia_msg("Certo, todas as.\nVou encaminhar sua solicitação para o setor do T.I.")
+        return blockUser7
 
     #--------------------------------------------------------------------------------------------------------------------------------------
     #----------------------------------------------------------TOTVS-----------------------------------------------------------------------
