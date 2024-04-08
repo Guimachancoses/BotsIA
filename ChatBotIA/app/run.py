@@ -93,7 +93,7 @@ class MainApp:
                         # Envia para openai a mensagem do usuário e depois envia a mensagem de resposta da openai         
                         elif self.msg is not None and self.retorno_suporte == "1" and self.imp == "1":                            
                             self.nova_msg = ""
-                            while self.msg != "sair" and self.nova_msg is not None and self.nova_msg != self.msg:                    
+                            while (self.msg != "sair" or self.msg != "Sair") and self.nova_msg is not None and self.nova_msg != self.msg:                    
                                 self.msg_op = self.msg
                                 self.resposta_openai = self.openai.iniciar_conversa(self.msg_op)
                                 if self.resposta_openai != "":
@@ -153,7 +153,7 @@ class MainApp:
                             self.password = ""
                             self.user = ""
                             self.attemps = 0 
-                            while self.msg != "sair" and self.nova_msg is not None and self.nova_msg != self.msg:   
+                            while (self.msg != "sair" or self.msg != "Sair") and self.nova_msg is not None and self.nova_msg != self.msg:   
                                 if self.attemps <= 2:              
                                     self.msg = self.bot.ultima_msg()
                                     if self.username == "" and self.msg is not None:                                
@@ -216,7 +216,7 @@ class MainApp:
                         # Envia para gemini a mensagem do usuário e depois envia a mensagem de resposta da gemini         
                         elif self.msg is not None and self.retorno_totvs == "1" and self.rError == "1":
                             self.nova_msg = ""
-                            while self.msg != "sair" and self.nova_msg is not None and self.nova_msg != self.msg:                    
+                            while (self.msg != "sair" or self.msg != "Sair") and self.nova_msg is not None and self.nova_msg != self.msg:                    
                                 self.send_msg = self.msg
                                 self.resposta_gemini = self.genai.iniciar_conversa(self.send_msg)
                                 self.resposta_search = self.search.enviar_pergunta(self.send_msg)

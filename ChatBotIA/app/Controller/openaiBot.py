@@ -22,7 +22,8 @@ class Openai:
 
     def iniciar_conversa(self, mensagem):
         listaMensagens = [
-            {"role": "system", "content": "Você é um assistente útil Brasileiro projetado para responder a perguntas simples em no máximo 20 palavras sobre problemas de impressora.Em português do Brasil."},
+            {"""role": "system", "content": "Você é um assistente útil Brasileiro projetado para responder a perguntas simples em no máximo 20 palavras sobre problemas de impressora.
+             Em português do Brasil. Caso a pergunta não for relacionado a problemas com a impressora, retorne 'Desculpe, não tenho essa informação.'."""},
         ]            
         resposta = self.enviar_mensagem(mensagem, listaMensagens)
         listaMensagens.append(resposta)

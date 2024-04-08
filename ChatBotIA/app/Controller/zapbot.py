@@ -12,8 +12,8 @@ class ZapBot:
     dir_path = os.getcwd()
     
     # Caminho onde será criada pasta profile
-    # profile = os.path.join(dir_path, fr"C:\Users\guilhermemachancoses\Documents", "wpp")
-    profile = os.path.join(dir_path, fr"C:\Users\Guilherme\Documents", "wpp")
+    profile = os.path.join(dir_path, fr"C:\Users\guilhermemachancoses\Documents", "wpp")
+    # profile = os.path.join(dir_path, fr"C:\Users\Guilherme\Documents", "wpp")
     def __init__(self):
         self.options = webdriver.ChromeOptions()
         self.options.add_argument("--disable-notifications")
