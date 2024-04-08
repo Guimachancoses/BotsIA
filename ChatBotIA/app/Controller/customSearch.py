@@ -1,10 +1,13 @@
 from googleapiclient.discovery import build
+import os
 
 class URLCorrector:
     def __init__(self):
-        self.api_key = ''
-        self.engine_id = ''
-        self.service = build("customsearch", "v1", developerKey=self.api_key)
+        self.api_key = os.getenv('key_gsearch')
+        self.key = self.api_key
+        self.engine_key = os.getenv('key_engineUrl')
+        self.engine_id = self.engine_key
+        self.service = build("customsearch", "v1", developerKey=self.key)
         self.engine = self.engine_id
         
 

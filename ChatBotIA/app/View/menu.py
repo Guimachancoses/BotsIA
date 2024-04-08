@@ -9,11 +9,11 @@ class Menu:
     # Chama as opções do menu:
     def show_menu(self):
         self.bot.envia_msg("""GuiBot: Esse é um texto com os comandos válidos digite:
-                        ⚫  suporte (para saber mais)
-                        ⚫  rede (para saber mais)
-                        ⚫  acessos (para saber mais)
-                        ⚫  totvs (para saber mais)
-                        ❌  sair (para encerrar) \n Digite uma das opções.""")
+                        ▪️  Suporte (Para saber mais)
+                        ▪️  Rede (Para saber mais)
+                        ▪️  Acessos (Para saber mais)
+                        ▪️  Totvs (Para saber mais)
+                        ❌  Sair (Para encerrar) \n Digite uma das opções.""")
         
     #--------------------------------------------------------------------------------------------------------------------------------------
     #----------------------------------------------------------SUPORTE---------------------------------------------------------------------
@@ -21,11 +21,11 @@ class Menu:
     def suporte(self):
         suporte = "1"
         self.bot.envia_msg("""GuiBot: Esse é um texto com os comandos válidos:
-                        ⚫ 1  (problema com a impressora)
-                        ⚫ 2  (computador não liga)
-                        ⚫ 3  (instalação de software)
-                        ⚫  help (voltar ao menu)
-                        ❌  sair (para encerrar) \n Digite uma das opções.""")
+                        ▪️ 1  (Problema com a impressora)
+                        ▪️ 2  (Computador não liga)
+                        ▪️ 3  (Instalação de software)
+                        ⬅️ Help (Voltar ao menu)
+                        ❌  Sair (Para encerrar) \n Digite uma das opções.""")
         return suporte
 
     # Caso escolha em suporte for 1:
@@ -52,11 +52,11 @@ class Menu:
     def rede(self):
         rede = "1"
         self.bot.envia_msg("""GuiBot: Esse é um texto com os comandos válidos:
-                        ⚫ 1  (sem internet)
-                        ⚫ 2  (vpn não funciona)
-                        ⚫ 3  (site não funciona)
-                        ⚫  help (voltar ao menu)
-                        ❌  sair (para encerrar) \n Digite uma das opções.""")
+                        ▪️ 1  (Sem internet)
+                        ▪️ 2  (Vpn não funciona)
+                        ▪️ 3  (Site não funciona)
+                        ⬅️ Help (Voltar ao menu)
+                        ❌  sair (Para encerrar) \n Digite uma das opções.""")
         return rede
     
     # Caso a escolha em rede for 1:
@@ -83,11 +83,11 @@ class Menu:
     def acessos(self):
         acesssos = "1"
         self.bot.envia_msg("""GuiBot: Esse é um texto com os comandos válidos:
-                        ⚫ 1  (troca de senha)
-                        ⚫ 2  (desbloqueio ou liberação)
-                        ⚫ 3  (bloqueio de usuário)
-                        ⚫  help (voltar ao menu)
-                        ❌  sair (para encerrar)\n Digite uma das opções.""")
+                        ▪️ 1  (Troca de senha)
+                        ▪️ 2  (Desbloqueio ou liberação)
+                        ▪️ 3  (Bloqueio de usuário)
+                        ⬅️ Help (Voltar ao menu)
+                        ❌  sair (Para encerrar)\n Digite uma das opções.""")
         return acesssos
     
     # Caso a escolha em acessos for 1:
@@ -100,22 +100,24 @@ class Menu:
     def unblock_pass(self):
         unblockPass = "1"
         self.bot.envia_msg("Entendo, você deseja aterar sua seunha.\nPor gentileza informe qual a plataforma que você deseja efetuar a troca de senha.")
-        return 
+        return unblockPass
     
     # Caso a escolha em acessos for 3:
     def block_user1(self):
         blockUser = "1"
-        self.bot.envia_msg("Entendo, você deseja bloquear um usuário.\nEssa função requer um nível de usuário.\nPor gentileza informe seu nome completo.")
+        self.bot.envia_msg("""Entendo, você deseja bloquear um usuário.
+                           \nEssa função requer um nível de usuário administrador de rede.
+                           \nPor gentileza informe seu usuário de login a rede.""")
         return blockUser
     
     def block_user2(self):
         blockUser2 = "1"
-        self.bot.envia_msg("Agora informe sua senha.")
+        self.bot.envia_msg("Certo, agora informe sua senha.")
         return blockUser2
        
     def block_user3(self):
         blockUser3 = "1"
-        self.bot.envia_msg("Informe o nome completo do usuário que você deseja bloquear.")
+        self.bot.envia_msg("Informe o login do usuário que você deseja bloquear (Conforme o login do AD).")
         return blockUser3
     
     def block_user4(self):
@@ -141,17 +143,30 @@ class Menu:
         self.bot.envia_msg("Certo, todas as.\nVou encaminhar sua solicitação para o setor do T.I.")
         return blockUser7
 
+    def block_user8(self):
+        blockUser8 = "1"
+        self.bot.envia_msg("""Atenção, se você deseja bloquear um usuário.
+                           \nEssa função requer um nível de usuário administrador de rede.
+                           \nPor gentileza informe seu usuário de login a rede.""")
+        return blockUser8
+
+    def error_block(self):
+        errorBlock = "1"
+        self.bot.envia_msg("""Sinto muito, parece que você não possui credenciais de administrador de rede.
+                            \nProcure o sertor do T.I.
+                            \nOu escolha a opção de agendar bloqueio de usuário.""")
+        return errorBlock
     #--------------------------------------------------------------------------------------------------------------------------------------
     #----------------------------------------------------------TOTVS-----------------------------------------------------------------------
     # Caso a oção for Totvs mostra:
     def totvs(self):
         totvs = "1"
         self.bot.envia_msg("""GuiBot: Esse é um texto com os comandos válidos:
-                        ⚫ 1  (usuário preso)
-                        ⚫ 2  (sistema travado)
-                        ⚫ 3  (erro na rotina)
-                        ⚫  help (voltar ao menu)
-                        ❌  sair (para encerrar)\n Digite uma das opções.""")
+                        ▪️ 1  (Usuário preso)
+                        ▪️ 2  (Sistema travado)
+                        ▪️ 3  (Erro na rotina)
+                        ⬅️ Help (Voltar ao menu)
+                        ❌  sair (Para encerrar)\n Digite uma das opções.""")
         return totvs
     
     # Caso escolha em suporte for 1:
@@ -183,3 +198,12 @@ class Menu:
     def sair(self):
         self.bot.envia_msg("Obrigado até a próxima!")
         return False
+    
+    #--------------------------------------------------------------------------------------------------------------------------------------
+    #----------------------------------------------------------OBRIGADO--------------------------------------------------------------------
+    # Caso a oção for sair mostra:
+    def redirect(self):
+        redirect = 1
+        self.bot.envia_msg("""Você será redirecionado para o menu principal, caso desejar continuar!
+                           \nSe não digite sair a qualquer momento.""")
+        return redirect

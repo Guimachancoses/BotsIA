@@ -1,9 +1,12 @@
 from googleapiclient.discovery import build
+import os
 
 class PesquisaGoogle:
     def __init__(self):
-        self.key = ''
-        self.engineID = ''
+        self.api_key = os.getenv('key_gsearch')
+        self.key = self.api_key
+        self.engine_key = os.getenv('key_engineTotvs')
+        self.engineID = self.engine_key
         self.service = build('customsearch', 'v1', developerKey=self.key)
         self.search_engine_id = self.engineID
 

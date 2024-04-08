@@ -12,8 +12,8 @@ class ZapBot:
     dir_path = os.getcwd()
     
     # Caminho onde será criada pasta profile
-    profile = os.path.join(dir_path, fr"C:\Users\guilhermemachancoses\Documents", "wpp")
-    # profile = os.path.join(dir_path, fr"C:\Users\Guilherme\Documents", "wpp")
+    # profile = os.path.join(dir_path, fr"C:\Users\guilhermemachancoses\Documents", "wpp")
+    profile = os.path.join(dir_path, fr"C:\Users\Guilherme\Documents", "wpp")
     def __init__(self):
         self.options = webdriver.ChromeOptions()
         self.options.add_argument("--disable-notifications")
@@ -85,8 +85,9 @@ class ZapBot:
             self.caixa_de_mensagem.send_keys(msg)
             sleep(2)
             # Seleciona botão enviar
+            WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '[data-tab="11"]')))
             self.botao_enviar = self.driver.find_element(By.CSS_SELECTOR, '[data-tab="11"]')
-            sleep(1)
+            sleep(2)
             # Envia msg
             self.botao_enviar.click()
             sleep(2)
@@ -198,3 +199,41 @@ class ZapBot:
 
         except Exception as e:
             print("Erro ao ler msg, tentando novamente!")
+            
+    def apagar_ultima_msg(self):
+        try:
+            # Encontre o botão de mais opções e click
+            self.driver.find_element(By.XPATH, '//*[@id="main"]/header/div[3]/div/div[3]/div/div').click()
+            
+            # Encontre a opção selecionar mensagem:
+            self.driver.find_element(By.XPATH, '//*[@id="app"]/div/span[5]/div/ul/div/div/li[2]').click()
+            
+            # Encontre todos os elementos com a classe "message-in"
+            elementos = self.driver.find_elements(By.CLASS_NAME, "message-in")
+            if elementos:
+                # Clicar no último menu encontrado
+                self.ultimo_menu = elementos[-1]
+                self.ultimo_menu.find_element(By.CLASS_NAME, '_ak2o').click()
+
+                # Esperar até que o menu de lixeira esteja visível
+                WebDriverWait(self.driver, 10).until(
+                    EC.visibility_of_element_located((By.XPATH, '//*[@id="main"]/span[2]/div/button[3]'))
+                )
+
+                # Clicar no último botão de lixeira
+                self.driver.find_element(By.XPATH, '//*[@id="main"]/span[2]/div/button[3]').click()
+                
+                # Esperar até que o menu de apagar esteja visível
+                WebDriverWait(self.driver, 10).until(
+                    EC.visibility_of_element_located((By.XPATH, '//*[@id="app"]/div/span[2]/div/span/div/div/div/div/div/div[2]/div/button[2]'))
+                )
+
+                # Clicar no último botão de apagar
+                self.driver.find_element(By.XPATH, '//*[@id="app"]/div/span[2]/div/span/div/div/div/div/div/div[2]/div/button[2]').click()                
+
+                print("A última mensagem foi apagada com sucesso!")
+
+            else:
+                print("Nenhum menu encontrado.")
+        except Exception as e:
+            print("Erro ao apagar msg, tentando novamente! Error: " + str(e))

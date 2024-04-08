@@ -1,8 +1,10 @@
 import openai
+import os
 
 class Openai:
     def __init__(self):
-        self.key = ''
+        self.api_key = os.getenv('key_openai')
+        self.key = self.api_key
         self.api_key = self.key
         openai.api_key = self.key
 
@@ -20,12 +22,12 @@ class Openai:
 
     def iniciar_conversa(self, mensagem):
         listaMensagens = [
-            {"role": "system", "content": "You are a helpful assistant designed to answer simple questions in no more than 10 words about printer problems."},
+            {"role": "system", "content": "Você é um assistente útil Brasileiro projetado para responder a perguntas simples em no máximo 20 palavras sobre problemas de impressora.Em português do Brasil."},
         ]            
         resposta = self.enviar_mensagem(mensagem, listaMensagens)
         listaMensagens.append(resposta)
         
-        if len(resposta.split()) > 10:
+        if len(resposta.split()) > 30:
             return "Aguarde,um dos nossos técnicos irá lhe atender."
         else:
             return resposta
