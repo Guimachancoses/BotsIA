@@ -53,7 +53,7 @@ class MainApp:
             while True:
                 sleep(2)
                 self.nova_msg = self.bot.ultima_msg()
-                if self.nova_msg != "sair" or self.nova_msg != "Sair":
+                if (self.nova_msg != "sair" or self.nova_msg != "Sair"):
                     if self.nova_msg is not None and self.nova_msg != self.msg:
                         self.msg = self.nova_msg
                         
@@ -164,6 +164,7 @@ class MainApp:
                                         self.password = self.bot.ultima_msg()
                                         self.msg = None                                    
                                         self.bot.apagar_ultima_msg()
+                                        sleep(2)
                                         self.menu.block_user3()
                                     if self.password != "" and self.user == "" and self.password != self.msg and self.msg is not None:                              
                                         self.user = self.bot.ultima_msg()
@@ -180,9 +181,10 @@ class MainApp:
                                                 self.resposta = desable_selected_user(self.connection, self.domain, self.user, self.path)
                                                 self.bot.envia_msg(self.resposta)
                                                 self.menu.redirect()
+                                                self.CValues.cleanAll()
                                                 self.nova_msg = self.bot.ultima_msg()
                                                 self.msg = self.nova_msg
-                                                self.CValues.cleanAll()
+                                                self.menu.show_menu()
                                             else:
                                                 self.user = ""
                                                 self.bot.envia_msg(self.path)                                                

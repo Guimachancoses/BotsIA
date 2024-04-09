@@ -11,9 +11,15 @@ class ZapBot:
     # O local de execução do nosso script
     dir_path = os.getcwd()
     
+    profile = fr""
     # Caminho onde será criada pasta profile
-    profile = os.path.join(dir_path, fr"C:\Users\guilhermemachancoses\Documents", "wpp")
-    # profile = os.path.join(dir_path, fr"C:\Users\Guilherme\Documents", "wpp")
+    profile1 = os.path.join(dir_path, fr"C:\Users\guilhermemachancoses\Documents", "wpp")
+    profile2 = os.path.join(dir_path, fr"C:\Users\Guilherme\Documents", "wpp")
+    if os.path.exists(profile1):
+        profile = profile1
+    else:
+        profile = profile2
+        
     def __init__(self):
         self.options = webdriver.ChromeOptions()
         self.options.add_argument("--disable-notifications")
@@ -225,12 +231,14 @@ class ZapBot:
                 
                 # Esperar até que o menu de apagar esteja visível
                 WebDriverWait(self.driver, 10).until(
-                    EC.visibility_of_element_located((By.XPATH, '//*[@id="app"]/div/span[2]/div/span/div/div/div/div/div/div[2]/div/button[2]'))
+                    EC.visibility_of_element_located(
+                        (By.XPATH, "//button[contains(@class, 'x1a8lsjc') and contains(@class, 'xjy5m1g') and contains(@class, 'xuxw1ft') and contains(@class, 'xv52azi') and .//div[contains(text(), 'Apagar para mim')]]"))
                 )
 
                 # Clicar no último botão de apagar
-                self.driver.find_element(By.XPATH, '//*[@id="app"]/div/span[2]/div/span/div/div/div/div/div/div[2]/div/button[2]').click()                
-
+                self.driver.find_element(By.XPATH,
+                    "//button[contains(@class, 'x1a8lsjc') and contains(@class, 'xjy5m1g') and contains(@class, 'xuxw1ft') and contains(@class, 'xv52azi') and .//div[contains(text(), 'Apagar para mim')]]").click()                
+                # //*[@id="app"]/div/span[2]/div/span/div/div/div/div/div/div[2]/div/button[2]
                 print("A última mensagem foi apagada com sucesso!")
 
             else:
