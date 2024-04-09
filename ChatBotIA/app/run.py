@@ -165,6 +165,7 @@ class MainApp:
                                         self.msg = None                                    
                                         self.bot.apagar_ultima_msg()
                                         sleep(2)
+                                        self.menu.msg_clean()
                                         self.menu.block_user3()
                                     if self.password != "" and self.user == "" and self.password != self.msg and self.msg is not None:                              
                                         self.user = self.bot.ultima_msg()

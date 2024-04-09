@@ -118,7 +118,7 @@ class Menu:
     
     def block_user2(self):
         blockUser2 = "1"
-        self.bot.envia_msg("Certo, agora informe sua senha.")
+        self.bot.envia_msg("Certo, agora informe sua senha.\nNão se preocupe sua senha não será armazenada nos registros dessa conversa.")
         return blockUser2
        
     def block_user3(self):
@@ -162,6 +162,11 @@ class Menu:
                             \nProcure o sertor do T.I.
                             \nOu escolha a opção de agendar bloqueio de usuário.""")
         return errorBlock
+    
+    def msg_clean(self):
+        msgClean = "1"
+        self.bot.envia_msg("Pronto, já apagamos sua senha da nossa conversa.\nVocê também pode apagar caso você queira.")
+        return msgClean
     #--------------------------------------------------------------------------------------------------------------------------------------
     #----------------------------------------------------------TOTVS-----------------------------------------------------------------------
     # Caso a oção for Totvs mostra:

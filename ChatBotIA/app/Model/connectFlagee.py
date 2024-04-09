@@ -4,21 +4,20 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.common.keys import Keys
 from anticaptchaofficial.recaptchav2proxyless import *
 from time import sleep
 import os
-
 
 class FlageeAutomator:
     def __init__(self):
         self.mail = os.getenv('mail_flagee')
         self.password = os.getenv('password_flagee')
+        self.BrokerCp = os.getenv('brokercp')
         self.browser = None
-        self.solver = recaptchaV2Proxyless()
-        self.solver.set_verbose(1)
-        self.solver.set_key(chave_api)
+        self.solver = recaptchaV2Proxyless()    
         
-
+    
     def start_browser(self):
         options = webdriver.ChromeOptions()
         options.add_argument("--disable-notifications")
@@ -41,99 +40,87 @@ class FlageeAutomator:
             By.XPATH, '//*[@id="inputPassword"]')
         login_field.send_keys(self.mail)
         password_field.send_keys(self.password)
-        # Resolve captcha recebe link do site:
-        self.solver.set_website_url(self.browser)
-        # cria variavel com a captcha:
-        self.chave_captcha = self.browser.find_element(By.ID, 'recaptcha-demo').get_attribute('data-sitekey')
-        # website resolve captcha:
-        self.solver.set_website_key(self.chave_captcha)
-        # retorno da resposta do website:
+
+        # Resolve captcha
+        self.chave_captcha = '6LfouhEjAAAAAJbiL2fcPw12KfmxL4pCL4yRYwjC'
+        self.solver.set_verbose(1) # Retorna mensagem de resposta da resolução do captcha
+        self.solver.set_key(self.BrokerCp) # Chave da API do captcha
+        self.solver.set_website_url(self.browser.current_url) # Passa a URL do site
+        self.solver.set_website_key(self.chave_captcha) # Define a chave do site
         self.resposta = self.solver.solve_and_return_solution()
 
         if self.resposta != 0:
-            # clica no botão de login:
-            self.browser.find_element(By.XPATH, '/html/body/div[2]/div[2]/div[2]/div/div/div/div/form/div/div[5]/input').click()
-        print("Logged in successfully!")
-        sleep(15)
+            # Id JSON 'g-recaptcha-response'
+            self.browser.execute_script(f"document.getElementById('g-recaptcha-response').innerHTML ='{self.resposta}'")
+            # Clica no botão de login
+            sleep(4)
+            self.browser.find_element(By.CLASS_NAME, 'button03').click()
+            connection = "Logged in successfully!"
+            sleep(15)
+            return connection
+        else:
+            connection = "Error logging in!"
+            sleep(15)
+            return connection
+        
+    # Função para navegar em site clica conta de email:
+    def navigate_to_acconut_mail(self):
+        try:
+            WebDriverWait(self.browser, 3).until(EC.presence_of_element_located(
+                (By.XPATH, '//*[@id="ClientAreaHomePagePanels-Active_Products_Services-1"]/div/div[2]'))).click()
+            print("Acesso aos email concluído!")
+        except Exception as e:
+            print(f'Error na tentativa de acessar os email: {e}')
+            
+    # Função para navegar em site clica lista de email:
+    def navigate_to_mails(self):
+        try:
+            WebDriverWait(self.browser, 3).until(EC.presence_of_element_located(
+                (By.XPATH, '//*[@id="mc_7k16aea13o5yf9j4yu0huir9kyvvj856"]/div[3]/div[1]'))).click()
+            print("Acesso a lista de email concluído!")
+        except Exception as e:
+            print(f'Error na tentativa de acessar a lista dos email: {e}')
+            
+    # Função para navegar em site encontrar o email do usuário:
+    def find_mail_user(self, user):
+        try:
+            WebDriverWait(self.browser, 3).until(EC.presence_of_element_located(
+                (By.XPATH, '//*[@id="accounts"]/div[1]/div[1]/div/input'))).click()
+            self.email_fields = self.browser.find_element(By.XPATH, '//*[@id="accounts"]/div[1]/div[1]/div/input')
+            self.email_fields.send_keys(user)
+            self.email_fields.send_keys(Keys.ENTER)
+            print("Busca por email concluído!")
+        except Exception as e:
+            print(f'Error na tentativa buscar o email: {user}')
 
-    # def navigate_to_queues(self):
-    #     try:
-    #         WebDriverWait(self.browser, 3).until(EC.presence_of_element_located(
-    #             (By.XPATH, '//*[@id="app-container"]/div[1]/div/div/nav/ul/app-nav-item[2]/a'))).click()
-    #         print("Navigated to queues!")
-    #     except Exception as e:
-    #         print(f'Error navigating to queues: {e}')
-
-    # def force_user_on_queue(self):
-    #     try:
-    #         input_field_xpath = '/html/body/div/div/div/div[2]/div[2]/div[2]/extension-list/div/div[2]/div/div[3]/div[1]/input'
-    #         self.browser.find_element(By.XPATH, input_field_xpath).clear()
-    #         self.browser.find_element(
-    #             By.XPATH, '//*[@id="app-container"]/div[1]/div/div/nav/ul/app-nav-item[2]/a').click()
-    #         sleep(1)
-    #         self.browser.find_element(
-    #             By.XPATH, '//*[contains(concat( " ", @class, " " ), concat( " ", "mc-select", " " ))]//i').click()
-    #         self.browser.find_element(By.XPATH, '//*[(@id = "btnStatus")]').click()
-    #         sleep(15)
-    #         self.browser.find_element(
-    #             By.XPATH, '/html/body/div[1]/div/div/div/div[2]/select[2]/option[3]').click()
-    #         sleep(1)
-    #         self.browser.find_element(
-    #             By.XPATH, '/html/body/div[1]/div/div/div/div[1]/button').click()
-    #         sleep(1)
-    #         self.browser.find_element(
-    #             By.XPATH, '//*[contains(concat( " ", @class, " " ), concat( " ", "mc-select", " " ))]//i').click()
-    #         print("User forced on queue successfully!")
-    #     except Exception as e:
-    #         print(f'Error forcing user on queue: {e}')
-    #         traceback.print_exc()
-
-    # def change_status(self):
-    #     try:
-    #         userList = ['5078', '5002', '5071', '5020', '5051', '1021', '5077',
-    #                     '6009', '5062', '5022', '5009', '5075', '5064', '1005', '5030', '5024', '6010', '5074',
-    #                     '5055', '5093', '5069']
-    #         input_field_xpath = '/html/body/div/div/div/div[2]/div[2]/div[2]/extension-list/div/div[2]/div/div[3]/div[1]/input'
-
-    #         for user in userList:
-    #             self.browser.find_element(By.XPATH, input_field_xpath).clear()
-    #             self.browser.find_element(By.XPATH, input_field_xpath).send_keys(user)
-    #             sleep(1)
-    #             self.browser.find_element(
-    #                 By.XPATH, '/html/body/div/div/div/div[2]/div[2]/div[2]/extension-list/div/div[2]/div/div[3]/table/tbody/tr/td[1]/label/i').click()
-    #             self.browser.find_element(By.XPATH, '//*[(@id = "btnStatus")]').click()
-    #             sleep(5)
-    #             self.browser.find_element(
-    #                 By.XPATH, '/html/body/div[1]/div/div/div/div[2]/select[1]/option[2]').click()
-    #             sleep(1)
-    #             self.browser.find_element(
-    #                 By.XPATH, '/html/body/div[1]/div/div/div/div[1]/button').click()
-    #             sleep(1)
-    #             print(f"Extension {user} status changed successfully!")
-    #     except Exception as e:
-    #         print(f'Error changing extension {user} status: {e}')
-    #         traceback.print_exc()
-
-    # def navigate_to_extensions(self):
-    #     self.browser.get('https://garbuio.my3cx.com.br/#/app/system_status/all')
-    #     print("Navigated to extensions!")
-
+    # Função para mudar o status do usuário para bloqueado:
+    def change_status_user(self):
+        try:
+            # Aguarda o botão de mais opções e clica:
+            WebDriverWait(self.browser, 3).until(EC.presence_of_element_located(
+                (By.XPATH, '//*[@id="accounts"]/div[3]/div[1]/table/tbody/tr/td[6]/span/button'))).click()
+            # Aguarda o botão de change status e clica:
+            WebDriverWait(self.browser, 3).until(EC.presence_of_element_located(
+                (By.XPATH, '//*[@id="accounts"]/div[3]/div[1]/table/tbody/tr/td[6]/span/div[2]/div/div/ul/li[2]/a'))).click()
+            # Aguarda a box do select opções de status e clica:
+            WebDriverWait(self.browser, 3).until(EC.presence_of_element_located(
+                (By.XPATH, '//*[@id="changeStatusForm"]/div/div[1]/div[2]/div/div[2]'))).click()
+            self.browser.find_element(By.XPATH, '//*[@id="mgModalContainer"]/div[3]/button[1]').click()
+            print("Status do email alterado para 'Bloqueado'!")
+        except Exception as e:
+            print(f'Error na tentativa alterar o status do email.')
+            
+    
     def run(self):
         try:
             self.start_browser()
-            self.login()
-            # while True:
-            #     now = datetime.datetime.now()
-            #     self.navigate_to_queues()
-            #     self.force_user_on_queue()
+            self.response = self.login()
+            if self.response == "Logged in successfully!":
+                self.navigate_to_acconut_mail()
+                self.navigate_to_mails()
+                self.find_mail_user('ederson')
+                self.change_status_user()
 
-            #     current_time = now.time()
-            #     print(current_time)
-            #     if (current_time >= datetime.time(8, 0) and current_time <= datetime.time(12, 0)) or \
-            #             (current_time >= datetime.time(13, 0) and current_time <= datetime.time(18, 0)):
-            #         self.change_status()
-
-            #     self.navigate_to_extensions()
 
         except Exception as e:
             print(f'Error: {e}')
@@ -141,7 +128,6 @@ class FlageeAutomator:
         finally:
             if self.browser:
                 self.browser.quit()
-
 
 def main():
     automator = FlageeAutomator()
