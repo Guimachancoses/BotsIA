@@ -55,7 +55,9 @@ class FlageeAutomator:
             # Clica no botão de login
             sleep(4)
             self.browser.find_element(By.CLASS_NAME, 'button03').click()
+            sleep(4)
             connection = "Logged in successfully!"
+            self.browser.get("https://painel.flagee.cloud/clientarea.php?action=productdetails&id=1128&mg-page=emailAccount&modop=custom&a=management")
             sleep(15)
             return connection
         else:
@@ -66,8 +68,8 @@ class FlageeAutomator:
     # Função para navegar em site clica conta de email:
     def navigate_to_acconut_mail(self):
         try:
-            WebDriverWait(self.browser, 3).until(EC.presence_of_element_located(
-                (By.XPATH, '//*[@id="ClientAreaHomePagePanels-Active_Products_Services-1"]/div/div[2]'))).click()
+            WebDriverWait(self.browser, 10).until(EC.presence_of_element_located(
+                (By.CSS_SELECTOR, '//div[@class="list-group-item" and @id="ClientAreaHomePagePanels-Active_Products_Services-1"]'))).click()
             print("Acesso aos email concluído!")
         except Exception as e:
             print(f'Error na tentativa de acessar os email: {e}')
@@ -75,8 +77,8 @@ class FlageeAutomator:
     # Função para navegar em site clica lista de email:
     def navigate_to_mails(self):
         try:
-            WebDriverWait(self.browser, 3).until(EC.presence_of_element_located(
-                (By.XPATH, '//*[@id="mc_7k16aea13o5yf9j4yu0huir9kyvvj856"]/div[3]/div[1]'))).click()
+            WebDriverWait(self.browser, 10).until(EC.presence_of_element_located(
+                (By.CSS_SELECTOR, 'a[href="https://painel.flagee.cloud/clientarea.php?action=productdetails&id=1128&mg-page=emailAccount&modop=custom&a=management"]'))).click()
             print("Acesso a lista de email concluído!")
         except Exception as e:
             print(f'Error na tentativa de acessar a lista dos email: {e}')
@@ -84,7 +86,7 @@ class FlageeAutomator:
     # Função para navegar em site encontrar o email do usuário:
     def find_mail_user(self, user):
         try:
-            WebDriverWait(self.browser, 3).until(EC.presence_of_element_located(
+            WebDriverWait(self.browser, 30).until(EC.presence_of_element_located(
                 (By.XPATH, '//*[@id="accounts"]/div[1]/div[1]/div/input'))).click()
             self.email_fields = self.browser.find_element(By.XPATH, '//*[@id="accounts"]/div[1]/div[1]/div/input')
             self.email_fields.send_keys(user)
@@ -96,19 +98,25 @@ class FlageeAutomator:
     # Função para mudar o status do usuário para bloqueado:
     def change_status_user(self):
         try:
-            # Aguarda o botão de mais opções e clica:
-            WebDriverWait(self.browser, 3).until(EC.presence_of_element_located(
-                (By.XPATH, '//*[@id="accounts"]/div[3]/div[1]/table/tbody/tr/td[6]/span/button'))).click()
-            # Aguarda o botão de change status e clica:
-            WebDriverWait(self.browser, 3).until(EC.presence_of_element_located(
-                (By.XPATH, '//*[@id="accounts"]/div[3]/div[1]/table/tbody/tr/td[6]/span/div[2]/div/div/ul/li[2]/a'))).click()
+            # Aguarda o usuário aparecer:
+            WebDriverWait(self.browser, 30).until(EC.presence_of_element_located(
+                (By.XPATH, '//*[@id="accounts"]/div[3]/div[1]/table/tbody/tr/td[1]/div/div/label/span')))
+            # Aguarda a presença do elemento
+            self.elemento_checkbox = WebDriverWait(self.browser, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "lu-form-checkbox")))
+            # Execute o JavaScript para alterar a visibilidade do checkbox
+            self.browser.execute_script("arguments[0].style.display = 'block';", self.elemento_checkbox)
+            sleep(2)
+            # Agora você pode clicar no checkbox:
+            self.browser.find_element(By.CLASS_NAME, "lu-form-checkbox").click()
             # Aguarda a box do select opções de status e clica:
-            WebDriverWait(self.browser, 3).until(EC.presence_of_element_located(
-                (By.XPATH, '//*[@id="changeStatusForm"]/div/div[1]/div[2]/div/div[2]'))).click()
-            self.browser.find_element(By.XPATH, '//*[@id="mgModalContainer"]/div[3]/button[1]').click()
+            # Exibir o elemento select
+            self.browser.execute_script("document.querySelector('.selectize-dropdown.single.plugin-directionDetector').style.display = 'block';")
+            sleep(1)
+            # Agora você pode clicar na opção "Bloqueado"
+            self.browser.find_element(By.CSS_SELECTOR, ".option[data-value='bloqueado']").click()
             print("Status do email alterado para 'Bloqueado'!")
         except Exception as e:
-            print(f'Error na tentativa alterar o status do email.')
+            print(f'Error na tentativa alterar o status do email:{e}')
             
     
     def run(self):
@@ -116,9 +124,11 @@ class FlageeAutomator:
             self.start_browser()
             self.response = self.login()
             if self.response == "Logged in successfully!":
-                self.navigate_to_acconut_mail()
-                self.navigate_to_mails()
+                sleep(15)
+                # self.navigate_to_acconut_mail()
+                # self.navigate_to_mails()
                 self.find_mail_user('ederson')
+                sleep(30)
                 self.change_status_user()
 
 
