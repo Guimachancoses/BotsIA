@@ -167,6 +167,11 @@ class Menu:
         msgClean = "1"
         self.bot.envia_msg("Pronto, já apagamos sua senha da nossa conversa.\nVocê também pode apagar caso você queira.")
         return msgClean
+    
+    def msg_wait(self):
+        msgWait = "1"
+        self.bot.envia_msg("Aguarde estamos bloqueando os acessos do usuario...")
+        return msgWait
     #--------------------------------------------------------------------------------------------------------------------------------------
     #----------------------------------------------------------TOTVS-----------------------------------------------------------------------
     # Caso a oção for Totvs mostra:

@@ -9,6 +9,7 @@ from Model.ldap_connection import LDAPManager
 from Controller.ldap_search import search_user
 from View.desableUser import desable_selected_user
 from Controller.cleanValues import CleanValues
+from View.mainFlagee import mainFlagee
 
 class MainApp:
     def __init__(self):
@@ -175,17 +176,22 @@ class MainApp:
                                         self.motivo = self.bot.ultima_msg()
                                     if self.username != "" and self.password != "" and self.user != "" and self.motivo != "" and self.msg is not None: 
                                         self.connection, self.domain ,self.resposta_conn = self.ldap_manager.connect(self.username, self.password)
-                                        self.bot.envia_msg(self.resposta_conn)                                        
+                                        self.menu.msg_wait()                                      
                                         if self.connection is not None:
                                             self.path = search_user(self.connection, self.domain, self.user)
                                             if self.path != "Erro ao buscar usuário, verifique se o login do usuário foi digitado corretamente.":
-                                                self.resposta = desable_selected_user(self.connection, self.domain, self.user, self.path)
-                                                self.bot.envia_msg(self.resposta)
-                                                self.menu.redirect()
-                                                self.CValues.cleanAll()
-                                                self.nova_msg = self.bot.ultima_msg()
-                                                self.msg = self.nova_msg
-                                                self.menu.show_menu()
+                                                if self.username != self.user:
+                                                    self.resposta = desable_selected_user(self.connection, self.domain, self.user, self.path)
+                                                    mainFlagee(self.user)
+                                                    self.bot.envia_msg(self.resposta)
+                                                    self.menu.redirect()
+                                                    self.CValues.cleanAll()
+                                                    self.nova_msg = self.bot.ultima_msg()
+                                                    self.msg = self.nova_msg
+                                                    self.menu.show_menu()
+                                                else:
+                                                    self.user = ""
+                                                    self.bot.envia_msg(self.path)  
                                             else:
                                                 self.user = ""
                                                 self.bot.envia_msg(self.path)                                                
