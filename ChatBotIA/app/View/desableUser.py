@@ -34,10 +34,10 @@ def desable_selected_user(connection, domain, user, resposta):
 #     print(resposta)
 #     if connection is not None:
 #         user, path = get_search_on_user(connection, domain)
+#         print(path)
 #         resposta_desbilitar = desable_selected_user(connection, domain, user, path)
 #         print(resposta_desbilitar)
 #     ldap_manager.disconnect()
-
 
 
 
