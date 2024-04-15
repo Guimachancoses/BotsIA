@@ -1,6 +1,8 @@
 from googleapiclient.discovery import build
 import os
 
+api_key = os.getenv('key_gsearch')
+
 class PesquisaGoogle:
     def __init__(self):
         self.api_key = os.getenv('key_gsearch')

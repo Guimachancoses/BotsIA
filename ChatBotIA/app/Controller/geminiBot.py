@@ -38,3 +38,7 @@ class Gemini:
         else:
             return resposta
         
+# if __name__ == '__main__':
+#     bot = Gemini()
+#     msg = input("Digite sua pergunta: ")
+#     print(bot.iniciar_conversa(msg))

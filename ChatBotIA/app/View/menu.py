@@ -24,7 +24,7 @@ class Menu:
         self.bot.envia_msg("""GuiBot: Esse é um texto com os comandos válidos:
                         ▪️ 1  -  (Problema com a impressora)
                         ▪️ 2  -  (Computador não liga)
-                        ▪️ 3  -  (Instalação de software)
+                        ▪️ 3  -  (Instalação de programa|sistema)
                         ⬅️ Help (Voltar ao menu)
                         ❌ Sair (Para encerrar) 
                         \nDigite uma das opções.""")
@@ -40,15 +40,20 @@ class Menu:
 
     # Caso escolha em suporte for 2:
     def pc_nao_liga(self):
-        pcOff = "1"
+        pcOff = "Chamado aberto via Bot - Whatsapp.\nUsuário: Computador não liga."
         self.bot.envia_msg("Entendo, seu computador não está ligando.\nVou direcionálo para um de nossos técnicos.")
         return pcOff
     
     # Caso escolha em suporte for 3:
     def install_soft(self):
         installsoft = "1"
-        self.bot.envia_msg("Entendo, você deseja instalar um software em sua máquina.\nVou direcionálo para um de nossos técnicos.")
+        self.bot.envia_msg("Entendo, você deseja instalar um 'programa|sistema' em sua máquina.\nInforme o nome do programa.")
         return installsoft
+    
+    def install_soft2(self):
+        installsoft2 = "Chamado aberto via Bot Whatsapp.\nUsuário solicitou a instalação de: \n"
+        self.bot.envia_msg("Certo, iremos encaminhar sua solicitação ao departamento de T.I.")
+        return installsoft2
 
     #--------------------------------------------------------------------------------------------------------------------------------------
     #----------------------------------------------------------REDE------------------------------------------------------------------------
@@ -99,13 +104,13 @@ class Menu:
     # Caso a escolha em acessos for 1:
     def change_pass(self):
         changePass = "1"
-        self.bot.envia_msg("Entendo, você deseja aterar sua seunha.\nPor gentileza informe qual a plataforma que você deseja efetuar a troca de senha.")
+        self.bot.envia_msg("Entendo, você deseja aterar sua senha.\nPor gentileza informe qual a plataforma que você deseja efetuar a troca de senha?")
         return changePass
     
     # Caso a escolha em acessos for 2:
     def unblock_pass(self):
         unblockPass = "1"
-        self.bot.envia_msg("Entendo, você deseja aterar sua seunha.\nPor gentileza informe qual a plataforma que você deseja efetuar a troca de senha.")
+        self.bot.envia_msg("Entendo, você precisa de desbloqueio ou liberação.\nPor gentileza informe qual a plataforma que você deseja pedir um desbloqueio ou liberação?.")
         return unblockPass
     
     # Caso a escolha em acessos for 3:
@@ -238,22 +243,40 @@ class Menu:
     # Mensagem identificar se a resposta ajudou o usuário, caso sim:
     def redirect3(self):
         redirect3 = 1
-        self.bot.envia_msg("""Que bom, que pude lhe ajudar!
-                           \nAté a próxima!.""")
+        self.bot.envia_msg("Que bom, que pude lhe ajudar!")
         return redirect3
     
     # Mensagem identificar se a resposta ajudou o usuário, caso sim:
     def redirect4(self):
         redirect4 = 1
         self.bot.envia_msg("""Me desculpe, você deseja fazer outra pergunta?
-                           \nCaso queria digite 'Sim'.
+                           \nCaso 'Sim' envie sua nova pergunta.
                            \nOu 'Sair' para encerrar a qualquer momento.""")
         return redirect4
     
      # Mensagem identificar se a resposta ajudou o usuário, caso sim:
     def redirect4(self):
         redirect4 = 1
-        self.bot.envia_msg("""Certo, por gentileza informe seu problema.
+        self.bot.envia_msg("""Certo, por gentileza informe seu problema novamente.
                            \nSe puder detalhar melhor, para que eu possa entender a sua necessidade.
                            \nDigite 'Sair' para encerrar a qualquer momento.""")
         return redirect4
+    
+    def redirect5(self):
+        redirect5 = 1
+        self.bot.envia_msg("""Me desculpe, infelizmente não consegui te ajudar.
+                           \nVou encaminhar seu problema para o setor do T.I.""")
+        return redirect5
+    
+    def get_mail(self):
+        getMail = 1
+        self.bot.envia_msg("""Certo, por gentileza informe seu email para mantermos o contato.
+                           \nUm chamado foi aberto, um de nossos técnicos entrará em contato.""")
+        return getMail
+    
+    def nenhuma_op(self):
+        nenhuma_op = 1
+        self.bot.envia_msg("Desculpe não entendi, você não digitou nenhuma opção válida, tente novamente.")
+        return nenhuma_op
+    
+        

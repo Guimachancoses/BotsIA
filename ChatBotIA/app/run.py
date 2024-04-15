@@ -10,6 +10,8 @@ from Controller.ldap_search import search_user
 from View.desableUser import desable_selected_user
 from Controller.cleanValues import CleanValues
 from View.mainFlagee import mainFlagee
+from View.openTicket import mainTiflux
+
 
 class MainApp:
     def __init__(self):
@@ -21,12 +23,14 @@ class MainApp:
         self.CValues = CleanValues()
         self.bot = self.menu.bot
         self.bot.abre_conversa("+55 19 98228-0312")
-        self.bot.envia_msg("⚡⛑ Olá, sou Guilherme! Para receber ajuda digite: help ⛑⚡")
+        self.userNameContato, self.userFoneContato = self.bot.get_data_user()
+        self.bot.envia_msg(f"⚡⛑ Olá, {self.NameContato} tudo bem? Sou Guilherme! Para receber ajuda digite: help ⛑⚡")
         self.imagem = self.bot.dir_path + "/Python-Programs/botOpenai/app/image.jpg"
         self.msg = ""
         # váriaveis das opções de suporte:        
         self.retorno_suporte = ""
         self.imp = "" # 1
+        self.installSoft = "" # 3
         # váriaveis das opções de rede:
         self.retorno_rede = ""
         self.netOff = ""
@@ -48,6 +52,10 @@ class MainApp:
         self.uslock = "" # 1
         self.sysOff = "" # 2
         self.rError = "" # 3
+        # variáveis do contato
+        self.mailUserContato = ""
+        self.titleTicket = ""
+        self.description = []
 
     def run(self):
         try:
@@ -57,7 +65,8 @@ class MainApp:
                 if (self.nova_msg != "sair" or self.nova_msg != "Sair"):
                     if self.nova_msg is not None and self.nova_msg != self.msg:
                         self.msg = self.nova_msg
-                        
+                        # -----------------------------------------------------------------------------------------------------
+                        # Mostra menu principal:
                         if self.msg is not None and self.retorno_suporte == "" and self.retorno_totvs == "" and self.retorno_rede == "" and self.retorno_acessos == "":
                             
                             if ((self.msg).lower()) == "help":
@@ -73,35 +82,77 @@ class MainApp:
                             elif ((self.msg).lower()) == "totvs":
                                 self.retorno_totvs = self.menu.totvs()
                             else:
-                                self.bot.envia_msg('Desculpe não entendi, por gentileza digite uma opção válida.')
+                                self.menu.nenhuma_op()
                         
                         # -----------------------------------------------------------------------------------------------------
                         # Caso suporte mostre as opções:           
-                        elif self.msg is not None and self.retorno_suporte == "1" and self.imp == "":
+                        elif self.msg is not None and self.retorno_suporte == "1" and self.imp == "" and self.pcOff == "" and self.installSoft == "":
                             
                             if self.msg == "1":
                                 self.imp = self.menu.suporte_impressora()
                             elif self.msg == "2":
-                                self.menu.pc_nao_liga()
+                                self.description = self.menu.pc_nao_liga()
+                                self.titleTicket = str('Chamado aberto via bot: Opção "Suporte - Categoria: Computador não liga".')
                             elif self.msg == "3":
-                                self.menu.install_soft()
+                                self.installSoft = self.menu.install_soft()
+                                self.titleTicket = str('Chamado aberto via bot: Opção "Suporte - Categoria: Intalar software".')
                             elif ((self.msg).lower()) == "help" or self.msg == "sair":
                                 self.retorno_suporte = ""
                                 self.msg = ""
                             else:
-                                self.bot.envia_msg('Desculpe não entendi, por gentileza digite uma opção válida.')
+                                self.menu.nenhuma_op()
+                                
                         
-                        # Envia para openai a mensagem do usuário e depois envia a mensagem de resposta da openai         
+                        # Caso opção 3, envia para openai a mensagem do usuário e depois envia a mensagem de resposta da openai         
+                        elif self.msg is not None and self.retorno_suporte == "1" and self.installSoft == "1":
+                            self.nova_msg = ""
+                            while (self.msg != "sair" or self.msg != "Sair") and self.nova_msg is not None and self.nova_msg != self.msg:
+                                self.pergunta = self.bot.ultima_msg()                                
+                                if self.pergunta != "" and self.pergunta is not None:
+                                    self.escolha_soft = self.pergunta
+                                    self.ret_intallSoft = self.menu.install_soft2
+                                    self.conct_description = str(self.ret_intallSoft + self.escolha_soft)
+                                    self.description.append(self.conct_description)
+                                    self.nova_msg = self.bot.ultima_msg()
+                                    self.msg = self.nova_msg
+                        
+                        # Caso opção 1, envia para openai a mensagem do usuário e depois envia a mensagem de resposta da openai         
                         elif self.msg is not None and self.retorno_suporte == "1" and self.imp == "1":                            
                             self.nova_msg = ""
                             while (self.msg != "sair" or self.msg != "Sair") and self.nova_msg is not None and self.nova_msg != self.msg:                    
-                                self.msg_op = self.msg
-                                self.resposta_openai = self.openai.iniciar_conversa(self.msg_op)
-                                if self.resposta_openai != "":
-                                    # retorna a resposta da openai
-                                    self.bot.envia_msg(self.resposta_openai)
-                                    self.nova_msg = self.bot.ultima_msg()
-                                    self.msg = self.nova_msg                                  
+                                if self.attemps <= 2:
+                                    self.pergunta = self.bot.ultima_msg()
+                                    if self.pergunta != "" and self.pergunta is not None:
+                                        self.msg_op = self.pergunta
+                                        self.description.append(self.msg_op)
+                                        self.resposta_openai = self.openai.iniciar_conversa(self.msg_op)
+                                        if self.resposta_openai != "":
+                                            # retorna a resposta da openai
+                                            self.bot.envia_msg(self.resposta_openai)
+                                            sleep(5)
+                                            self.choiseImp = self.menu.redirect2()
+                                            if "Sim" in self.choiseImp:
+                                                self.menu.redirect3()
+                                                self.menu.redirect()
+                                                self.CValues.cleanAll()
+                                                self.nova_msg = self.bot.ultima_msg()
+                                                self.msg = self.nova_msg
+                                            else:
+                                                self.menu.redirect4()
+                                                self.attempts =+ 1
+                                                self.pergunta = ""
+                                else:
+                                    self.nova_msg = ""
+                                    self.menu.redirect5()
+                                    self.menu.get_mail()
+                                    while (self.msg != "sair" or self.msg != "Sair") and self.nova_msg is not None and self.nova_msg != self.msg:  
+                                        self.mailUserContato = self.bot.ultima_msg()
+                                        if self.mailUserContato != "":
+                                            self.titleTicket = str('Chamado aberto via bot: Opção "Suporte - Categoria: Impressora".')
+                                            self.nova_msg = self.bot.ultima_msg()
+                                            self.msg = self.nova_msg
+                                            
+                                                                    
                         
                         # -----------------------------------------------------------------------------------------------------
                         # Caso rede mostre as opções:           
@@ -109,15 +160,17 @@ class MainApp:
                             
                             if self.msg == "1":
                                 self.netOff = self.menu.net_off()
+                                self.titleTicket = str('Chamado aberto via bot: Opção "Rede - Categoria: Sem acesso a internet".')
                             elif self.msg == "2":
                                 self.anydesk = self.vpnOff = self.menu.vpn_off()
+                                self.titleTicket = str('Chamado aberto via bot: Opção "Rede - Categoria: Sem acesso a VPN".')
                             elif self.msg == "3":
                                 self.page_out = self.pageOff = self.menu.page_off()
                             elif ((self.msg).lower()) == "help" or self.msg == "sair":
                                 self.retorno_rede = ""
                                 self.msg = ""
                             else:
-                                self.bot.envia_msg('Desculpe não entendi, por gentileza digite uma opção válida.')
+                                self.menu.nenhuma_op()
                         
                         # Envia a URL para testar o site:         
                         elif self.msg is not None and self.retorno_rede == "1" and self.page_out == "1":
@@ -130,6 +183,7 @@ class MainApp:
                                     self.bot.envia_msg(self.resposta_testUrl)
                                     self.nova_msg = self.bot.ultima_msg()
                                     self.msg = self.nova_msg
+                                    # self.titleTicket = str('Chamado aberto via bot: Opção "Rede - Categoria: Site indisponível".' - CASO CHAMADO
                                     
                         # -----------------------------------------------------------------------------------------------------
                         # Caso acessos mostre as opções:           
@@ -137,15 +191,17 @@ class MainApp:
                             
                             if self.msg == "1":
                                 self.changePass = self.menu.change_pass()
+                                self.titleTicket = str('Chamado aberto via bot: Opção "Acessos - Categoria: Troca de senha".')
                             elif self.msg == "2":
                                 self.unblockPass = self.menu.unblock_pass()
+                                self.titleTicket = str('Chamado aberto via bot: Opção "Acessos - Categoria: Desbloquio | Liberação".')
                             elif self.msg == "3":
                                 self.blockUser = self.menu.block_user1()                            
                             elif ((self.msg).lower()) == "help" or self.msg == "sair":
                                 self.retorno_suporte = ""
                                 self.msg = ""
                             else:
-                                self.bot.envia_msg('Desculpe não entendi, por gentileza digite uma opção válida.')
+                                self.menu.nenhuma_op()
                                 
                         # Caso opção 3 "Bloqueio usuário"
                         elif self.msg is not None and self.retorno_acessos == "1" and self.blockUser == "1":
@@ -212,15 +268,17 @@ class MainApp:
                             
                             if self.msg == "1":
                                 self.uslock = self.menu.user_lock()
+                                self.titleTicket = str('Chamado aberto via bot: Opção "Totvs - Categoria: Limite de conexão do usuário".')
                             elif self.msg == "2":
                                 self.sysOff = self.menu.system_crash()
+                                self.titleTicket = str('Chamado aberto via bot: Opção "Totvs - Categoria: Sistema travado".')
                             elif self.msg == "3":
                                 self.rError = self.menu.routine_error()
                             elif ((self.msg).lower()) == "help" or self.msg == "sair":
                                 self.retorno_totvs = ""
                                 self.msg = ""
                             else:
-                                self.bot.envia_msg('Desculpe não entendi, por gentileza digite uma opção válida.')
+                                self.menu.nenhuma_op()
                                 
                         # Envia para gemini a mensagem do usuário e depois envia a mensagem de resposta da gemini         
                         elif self.msg is not None and self.retorno_totvs == "1" and self.rError == "1":
@@ -234,10 +292,28 @@ class MainApp:
                                     self.bot.envia_msg(self.resposta_gemini)
                                     self.bot.envia_msg(self.resposta_search)
                                     self.nova_msg = self.bot.ultima_msg()
-                                    self.msg = self.nova_msg                                
-                                
+                                    self.msg = self.nova_msg
+                        
+                        # Funçaõ para todas as opções que encaminham para o suporte
+                        elif self.titleTicket != "" and (len(self.description) != 0):
+                            if self.mailUserContato == "":                    
+                                self.menu.get_mail()
+                                self.nova_msg = ""
+                                while (self.msg != "sair" or self.msg != "Sair") and self.nova_msg is not None and self.nova_msg != self.msg:
+                                    self.mailUserContato = self.bot.ultima_msg()
+                                    mainTiflux(self.userNameContato, self.mailUserContato, self.userFoneContato, self.titleTicket, self.description)
+                                    self.menu.redirect()
+                                    self.CValues.cleanAll()
+                                    self.nova_msg = self.bot.ultima_msg()
+                                    self.msg = self.nova_msg
+                            else:
+                                mainTiflux(self.userNameContato, self.mailUserContato, self.userFoneContato, self.titleTicket, self.description)                              
+                                self.menu.redirect()
+                                self.CValues.cleanAll()
+                                self.nova_msg = self.bot.ultima_msg()
+                                self.msg = self.nova_msg
                         else:
-                            self.bot.envia_msg('Desculpe não entendi, por gentileza digite uma opção válida.')
+                            self.menu.nenhuma_op()
                     else:
                         print("Aguardando nova mensagem...")
                 else:

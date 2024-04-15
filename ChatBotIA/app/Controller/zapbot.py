@@ -245,3 +245,27 @@ class ZapBot:
                 print("Nenhum menu encontrado.")
         except Exception as e:
             print("Erro ao apagar msg, tentando novamente! Error: " + str(e))
+    
+    # # Pegar os dados do usuário que iniciou a conversa:        
+    def get_data_user(self):
+        # Clique no nome do usuário
+        self.driver.find_element(By.XPATH, '//*[@id="main"]/header/div[2]').click()
+
+        # Espere até que o elemento da conta comercial ou normal seja visível
+        elemento_conta = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, '//*[@id="app"]/div/div[2]/div[5]/span/div/span/div/div/section/div[2]/div/div/div[1]'))
+        )
+
+        # Encontre e copie o conteúdo em variáveis ​​apropriadas
+        if "comercial" in elemento_conta.find_element(By.XPATH, '//*[@id="app"]/div/div[2]/div[5]/span/div/span/div/div/section/div[2]/div/div/div[1]').text:
+            nome = self.driver.find_element(By.XPATH, '//*[@id="app"]/div/div[2]/div[5]/span/div/span/div/div/section/div[1]/div[3]/div[1]/div[2]/span').text
+            numero = self.driver.find_element(By.XPATH, '//*[@id="app"]/div/div[2]/div[5]/span/div/span/div/div/section/div[6]/div[3]/div/div/span/span').text
+        else:
+            nome = self.driver.find_element(By.XPATH, '//*[@id="app"]/div/div[2]/div[5]/span/div/span/div/div/section/div[1]/div[2]/div/span/span').text
+            numero = self.driver.find_element(By.XPATH, '//*[@id="app"]/div/div[2]/div[5]/span/div/span/div/div/section/div[1]/div[2]/h2/div/span[1]').text
+
+        # Clique no elemento para sair das informações do usuário
+        self.driver.find_element(By.XPATH, '//*[@id="app"]/div/div[2]/div[5]/span/div/span/div/header/div/div[1]/div').click()
+
+        # Retorne as informações
+        return nome, numero
