@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from time import sleep
 import os
+import re
 
 class ZapBot:
     # O local de execução do nosso script
@@ -145,6 +146,24 @@ class ZapBot:
             # Encontre todos os elementos com a classe "message-in"
             elementos = self.driver.find_elements(By.CLASS_NAME, "message-in")
             
+            ultimo_elemento = elementos[-1]
+            texto_atributo = ultimo_elemento.find_element(By.CLASS_NAME, 'copyable-text')
+            ultima_dataIn = texto_atributo.get_attribute('data-pre-plain-text')
+            
+            # Remover tudo que estiver fora dos colchetes
+            inside_brackets = re.findall(r'\[(.*?)\]', ultima_dataIn)
+
+            if inside_brackets:
+                # Extrair a data de dentro dos colchetes
+                data = re.search(r'\d{2}/\d{2}/\d{4}', inside_brackets[0])
+                
+                if data:
+                    dataIn = data.group()
+                else:
+                    print("Data não encontrada dentro dos colchetes")
+            else:
+                print("Não foram encontrados colchetes na string")
+                        
             # Inicialize uma lista vazia para armazenar os textos das mensagens
             lista_resposta = []
             lista_horas = []
@@ -165,9 +184,9 @@ class ZapBot:
                 ultima_hora = lista_horas[-1]
                 
                 # Obtém a hora atual
-                hora_ult_msg_env = self.hora_ultima_msg_enviada()
+                hora_ult_msg_env, dataOut = self.hora_ultima_msg_enviada()
                 
-                if ultima_hora < hora_ult_msg_env:
+                if (dataIn < dataOut) or (ultima_hora < hora_ult_msg_env):
                     return None
                 else:
                     return ultimo_valor
@@ -185,6 +204,29 @@ class ZapBot:
             # Encontre todos os elementos com a classe "message-in"
             elementos = self.driver.find_elements(By.CLASS_NAME, "message-out")
             
+            # Pegue o último elemento com a classe "message-out"
+            ultimo_out_elemento = elementos[-1]
+
+            # Encontre a classe interna "copyable-text" dentro do último elemento "message-out"
+            texto_out_atributo = ultimo_out_elemento.find_element(By.CLASS_NAME, 'copyable-text')
+
+            # Obtenha o valor do atributo "data-pre-plain-text"
+            ultima_dataOut = texto_out_atributo.get_attribute('data-pre-plain-text')
+            
+            # Remover tudo que estiver fora dos colchetes
+            inside_brackets = re.findall(r'\[(.*?)\]', ultima_dataOut)
+
+            if inside_brackets:
+                # Extrair a data de dentro dos colchetes
+                data = re.search(r'\d{2}/\d{2}/\d{4}', inside_brackets[0])
+                
+                if data:
+                    dataOut = data.group()
+                else:
+                    print("Data não encontrada dentro dos colchetes")
+            else:
+                print("Não foram encontrados colchetes na string")
+            
             # Inicialize uma lista vazia para armazenar os textos das mensagens
             lista_horas = []
 
@@ -198,7 +240,7 @@ class ZapBot:
             # Verifique se há pelo menos uma mensagem antes de acessar a última
             if lista_horas:
                 ultima_hora = lista_horas[-1]                
-                return ultima_hora
+                return ultima_hora, dataOut
             else:
                 print("Nenhuma hora encontrada")
                 return None

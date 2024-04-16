@@ -40,7 +40,7 @@ class Menu:
 
     # Caso escolha em suporte for 2:
     def pc_nao_liga(self):
-        pcOff = "Chamado aberto via Bot - Whatsapp.\nUsuário: Computador não liga."
+        pcOff = "Usuário: Computador | Notebook, não está ligando."
         self.bot.envia_msg("Entendo, seu computador não está ligando.\nVou direcionálo para um de nossos técnicos.")
         return pcOff
     
@@ -270,9 +270,18 @@ class Menu:
     
     def get_mail(self):
         getMail = 1
-        self.bot.envia_msg("""Certo, por gentileza informe seu email para mantermos o contato.
-                           \nUm chamado foi aberto, um de nossos técnicos entrará em contato.""")
+        self.bot.envia_msg("Por gentileza informe seu email, assim manteremos contato.")
         return getMail
+    
+    def get_mail2(self):
+        getMail2 = 1
+        self.bot.envia_msg("Por gentileza informe um email, válido.")
+        return getMail2
+    
+    def op_ticket(self):
+        opTicket = 1
+        self.bot.envia_msg("Um chamado foi aberto, um de nossos técnicos entrará em contato.")
+        return opTicket
     
     def nenhuma_op(self):
         nenhuma_op = 1

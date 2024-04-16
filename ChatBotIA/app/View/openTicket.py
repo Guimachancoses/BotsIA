@@ -9,12 +9,14 @@ class OpenTicketTiflux:
         self.cnn = OperationTiflux(self.browser)
         
     # Função abrir ticket    
-    def open_ticket(self, user, email, fone, title, description):
+    def open_ticket(self, user, email, fone, title, description=[]):
         self.user = user
         self.email = email
         self.fone = fone
         self.title = title
-        self.description = description
+        self.listDescription = description
+        
+        
         try:
             # Prencher todos os campos do ticket:
             # Campo do nome:
@@ -26,7 +28,8 @@ class OpenTicketTiflux:
                     if self.sendFone is True:
                         self.sendTitle = self.cnn.fill_title(self.cnn, self.title)
                         if self.sendTitle is True:
-                            self.sendDescription = self.cnn.fill_description(self.cnn, self.description)
+                            for self.description in self.listDescription:
+                                self.sendDescription = self.cnn.fill_description(self.cnn, self.description)
                             if self.sendDescription is True:
                                 self.resolveCaptcha = self.cnn.resolve_captcha(self.cnn)
                                 if "Task solved!" in self.resolveCaptcha:
@@ -51,7 +54,7 @@ class OpenTicketTiflux:
             print("Error: ", e)
 
 # Função Main:
-def mainTiflux(user, email, fone, title, description):
+def mainTiflux(user, email, fone, title, description=[]):
         try:
             cnn = TifluxConnect()
             browser = cnn.start_browser(cnn)

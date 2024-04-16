@@ -22,8 +22,10 @@ class OperationTiflux(TifluxConnect):
             if self.resposta != 0:
                 # Id JSON 'g-recaptcha-response'
                 self.browser.execute_script(f"document.getElementById('g-recaptcha-response').innerHTML ='{self.resposta}'")
+                
                 connection = "Task solved!"
                 return connection
+        
             else:
                 connection = "Error in task solved"
                 return connection
