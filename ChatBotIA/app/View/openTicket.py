@@ -33,11 +33,11 @@ class OpenTicketTiflux:
                             if self.sendDescription is True:
                                 self.resolveCaptcha = self.cnn.resolve_captcha(self.cnn)
                                 if "Task solved!" in self.resolveCaptcha:
-                                    # self.sendAll = self.cnn.send_all(self.cnn) -- desabilitado para não enviar o ticket
-                                    # if self.sendAll is True:
+                                    self.sendAll = self.cnn.send_all(self.cnn)
+                                    if self.sendAll is True:
                                         print("Ticket abriu com sucesso!")                                        
-                                    # else:
-                                    #     print("Erro ao abrir ticket")
+                                    else:
+                                        print("Erro ao abrir ticket")
                                 else:
                                      print("Erro ao resolver o captcha")
                             else:
@@ -63,6 +63,6 @@ def mainTiflux(user, email, fone, title, description=[]):
         except Exception as e:
             print("Error: ", e)
         finally:
-            cnn.close_connection(browser)
+            cnn.close_connection(cnn, browser)
 # if __name__ == "__main__":
 #     mainTiflux()

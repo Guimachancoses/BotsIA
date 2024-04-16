@@ -114,7 +114,6 @@ class OperationTiflux(TifluxConnect):
         try:
             self.browser.find_element(self.by.CLASS_NAME, 'ant-btn-primary').click()
             self.sleep(5)
-            self.close_connection()
             print("Chamado aberto!")
             return True
         except Exception as e:

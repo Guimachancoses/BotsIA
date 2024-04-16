@@ -74,7 +74,7 @@ class ZapBot:
             self.caixa_de_pesquisa.send_keys(contato)
             sleep(2)
             # Seleciona o contato
-            self.contato = self.driver.find_element(By.XPATH, '//*[@id="app"]/div/div[2]/div[2]/div[1]/span/div/span/div/div[2]/div/div/div/div[2]')
+            self.contato = self.driver.find_element(By.CLASS_NAME, '_ak72')
             # Entra na conversa
             self.contato.click()
         except (TimeoutException, NoSuchElementException) as e:
@@ -146,52 +146,56 @@ class ZapBot:
             # Encontre todos os elementos com a classe "message-in"
             elementos = self.driver.find_elements(By.CLASS_NAME, "message-in")
             
-            ultimo_elemento = elementos[-1]
-            texto_atributo = ultimo_elemento.find_element(By.CLASS_NAME, 'copyable-text')
-            ultima_dataIn = texto_atributo.get_attribute('data-pre-plain-text')
-            
-            # Remover tudo que estiver fora dos colchetes
-            inside_brackets = re.findall(r'\[(.*?)\]', ultima_dataIn)
-
-            if inside_brackets:
-                # Extrair a data de dentro dos colchetes
-                data = re.search(r'\d{2}/\d{2}/\d{4}', inside_brackets[0])
+            if len(elementos) > 0:
+                ultimo_elemento = elementos[-1]
+                texto_atributo = ultimo_elemento.find_element(By.CLASS_NAME, 'copyable-text')
+                ultima_dataIn = texto_atributo.get_attribute('data-pre-plain-text')
                 
-                if data:
-                    dataIn = data.group()
+                # Remover tudo que estiver fora dos colchetes
+                inside_brackets = re.findall(r'\[(.*?)\]', ultima_dataIn)
+
+                if inside_brackets:
+                    # Extrair a data de dentro dos colchetes
+                    data = re.search(r'\d{2}/\d{2}/\d{4}', inside_brackets[0])
+                    
+                    if data:
+                        dataIn = data.group()
+                    else:
+                        print("Data não encontrada dentro dos colchetes")
                 else:
-                    print("Data não encontrada dentro dos colchetes")
-            else:
-                print("Não foram encontrados colchetes na string")
-                        
-            # Inicialize uma lista vazia para armazenar os textos das mensagens
-            lista_resposta = []
-            lista_horas = []
+                    print("Não foram encontrados colchetes na string")
+                            
+                # Inicialize uma lista vazia para armazenar os textos das mensagens
+                lista_resposta = []
+                lista_horas = []
 
-            # Itere sobre os elementos encontrados e adicione os textos à lista_resposta
-            for elemento in elementos:
-                texto = elemento.text.strip().split("\\")[0]
-                if texto:  # Verifica se o texto não está vazio
-                    msg = str(texto[0:-6])
-                    conteudo = msg.split("\n")[0]
-                    hora = str(texto[-5:])
-                    lista_resposta.append(conteudo)
-                    lista_horas.append(hora)
+                # Itere sobre os elementos encontrados e adicione os textos à lista_resposta
+                for elemento in elementos:
+                    texto = elemento.text.strip().split("\\")[0]
+                    if texto:  # Verifica se o texto não está vazio
+                        msg = str(texto[0:-6])
+                        conteudo = msg.split("\n")[0]
+                        hora = str(texto[-5:])
+                        lista_resposta.append(conteudo)
+                        lista_horas.append(hora)
 
-            # Verifique se há pelo menos uma mensagem antes de acessar a última
-            if lista_resposta:
-                ultimo_valor = str(lista_resposta[-1])
-                ultima_hora = lista_horas[-1]
-                
-                # Obtém a hora atual
-                hora_ult_msg_env, dataOut = self.hora_ultima_msg_enviada()
-                
-                if (dataIn < dataOut) or (ultima_hora < hora_ult_msg_env):
+                # Verifique se há pelo menos uma mensagem antes de acessar a última
+                if lista_resposta:
+                    ultimo_valor = str(lista_resposta[-1])
+                    ultima_hora = lista_horas[-1]
+                    
+                    # Obtém a hora atual
+                    hora_ult_msg_env, dataOut = self.hora_ultima_msg_enviada()
+                    
+                    if ((dataIn < dataOut) or (dataIn == "")) or (ultima_hora < hora_ult_msg_env):
+                        return None
+                    else:
+                        return ultimo_valor
+                else:
+                    print("Nenhuma mensagem listada.")
                     return None
-                else:
-                    return ultimo_valor
             else:
-                print("Nenhuma mensagem encontrada")
+                print("Nenhuma mensagem encontrada, aguardando mensagem...")
                 return None
 
         except Exception as e:
@@ -290,6 +294,7 @@ class ZapBot:
     
     # # Pegar os dados do usuário que iniciou a conversa:        
     def get_data_user(self):
+        sleep(2)
         # Clique no nome do usuário
         self.driver.find_element(By.XPATH, '//*[@id="main"]/header/div[2]').click()
 
