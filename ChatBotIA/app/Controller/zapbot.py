@@ -187,7 +187,11 @@ class ZapBot:
                     # Obtém a hora atual
                     hora_ult_msg_env, dataOut = self.hora_ultima_msg_enviada()
                     
-                    if ((dataIn < dataOut) or (dataIn == "")) or (ultima_hora < hora_ult_msg_env):
+                    if dataIn < dataOut:
+                        return None
+                    if dataIn == "":
+                        return None
+                    if ultima_hora < hora_ult_msg_env:
                         return None
                     else:
                         return ultimo_valor

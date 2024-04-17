@@ -63,9 +63,11 @@ class MainApp:
         try:
             while True:
                 sleep(2)
-
-                self.msg = self.get_new_msg()
-                if self.msg != "Aguardando nova mensagem...":
+                self.msg_get = self.msg_new = ""
+                self.msg_get = self.get_new_msg()
+                self.msg_new = self.msg_get
+                if (self.msg_new != self.msg and self.msg_new != "" and self.msg_new != "Aguardando nova mensagem..."):
+                    self.msg = self.msg_new
                     # -----------------------------------------------------------------------------------------------------
                     # Mostra MENU principal:
                     if self.retorno_suporte == "" and self.retorno_totvs == "" and self.retorno_rede == "" and self.retorno_acessos == "":
@@ -122,8 +124,8 @@ class MainApp:
         self.nova_msg = self.bot.ultima_msg()
         if (self.nova_msg != "sair" or self.nova_msg != "Sair"):
             if self.nova_msg is not None and self.nova_msg != self.msg:
-                self.msg = self.nova_msg
-                return self.msg
+                self.msg_recebida = self.nova_msg
+                return self.msg_recebida
             else:
                 return "Aguardando nova mensagem..."
         else:
@@ -219,50 +221,50 @@ class MainApp:
     # Função exibir submenu de Suporte:
     def exibe_submenu_suporte(self, msg):
         self.msg = msg
-        if self.msg == "1":
-            # Caso 1 problema com a impressora:
-            self.imp = self.menu.suporte_impressora()            
-            self.enviar_openai()  
-        elif self.msg == "2":
-            # Caso 2 computador não liga:
-            self.pcOff = self.menu.pc_nao_liga()
-            self.description.append(self.pcOff)
-            self.titleTicket = str('Chamado aberto via bot: Opção "Suporte - Categoria: Computador não liga".')
-            self.condicao_op_chamado()
-        elif self.msg == "3":
-            # Caso 3 instalar software:
-            self.installSoft = self.menu.install_soft()
-            self.titleTicket = str('Chamado aberto via bot: Opção "Suporte - Categoria: Intalar software".')
-            self.op_install_soft()
-        elif ((self.msg).lower()) == "help" or self.msg == "sair":
-            self.retorno_suporte = ""
-            self.msg = ""
-        else:
-            self.menu.nenhuma_op()
+        match self.msg:
+            case "1":                
+                # Caso 1 problema com a impressora:
+                self.imp = self.menu.suporte_impressora()            
+                self.enviar_openai()  
+            case "2":
+                # Caso 2 computador não liga:
+                self.pcOff = self.menu.pc_nao_liga()
+                self.description.append(self.pcOff)
+                self.titleTicket = str('Chamado aberto via bot: Opção "Suporte - Categoria: Computador não liga".')
+                self.condicao_op_chamado()
+            case "3":
+                # Caso 3 instalar software:
+                self.installSoft = self.menu.install_soft()
+                self.titleTicket = str('Chamado aberto via bot: Opção "Suporte - Categoria: Intalar software".')
+                self.op_install_soft()
+            case _:
+                self.menu.nenhuma_op()
             
             
     # Função exibir Menu:
     def exibe_menu(self, msg):
-        if ((msg).lower()) == "help":
-            # Exibe o menu principal:
-            self.menu.show_menu()
-        elif ((msg).lower()) == "sair":
-            # Finaliza o sistema:
-            self.menu.sair()
-        elif ((msg).lower()) == "suporte":
-            # Exibe submenu de suporte:
-            self.retorno_suporte = self.menu.suporte()
-        elif ((msg).lower()) == "rede":
-            # Exibe submenu de rede:
-            self.retorno_rede = self.menu.rede()
-        elif ((msg).lower()) == "acessos":
-            # Exibe submenu de acessos:
-            self.retorno_acessos = self.menu.acessos()
-        elif ((msg).lower()) == "totvs":
-            # Exibe submenu da totvs:
-            self.retorno_totvs = self.menu.totvs()
-        else:
-            self.menu.nenhuma_op()
+        self.msg = ((msg).lower())
+        match self.msg:
+            case "help":
+                # Exibe o menu principal:
+                self.menu.show_menu()
+            case "sair":
+                # Finaliza o sistema:
+                self.menu.sair()
+            case "suporte":
+                # Exibe submenu de suporte:
+                self.retorno_suporte = self.menu.suporte()
+            case "rede":
+                # Exibe submenu de rede:
+                self.retorno_rede = self.menu.rede()
+            case "acessos":
+                # Exibe submenu de acessos:
+                self.retorno_acessos = self.menu.acessos()
+            case "totvs":
+                # Exibe submenu da totvs:
+                self.retorno_totvs = self.menu.totvs()
+            case _:
+                self.menu.nenhuma_op()
             
             
     # Função para enviar a Gemini
@@ -304,8 +306,7 @@ class MainApp:
                 
     # Função para enviar para a OpenAI
     def enviar_openai(self):
-        self.nova_msg = ""
-        while (self.msg != "sair" or self.msg != "Sair") and self.nova_msg is not None and self.nova_msg != self.msg:                    
+        while True:                   
             if self.attemps <= 2:
                 self.pergunta = self.bot.ultima_msg()
                 if self.pergunta != "" and self.pergunta is not None:
@@ -323,6 +324,7 @@ class MainApp:
                             self.CValues.cleanAll()
                             self.nova_msg = self.bot.ultima_msg()
                             self.msg = self.nova_msg
+                            break
                         else:
                             self.menu.redirect4()
                             self.attempts =+ 1
@@ -336,6 +338,7 @@ class MainApp:
                     if self.mailUserContato != "":
                         self.titleTicket = str('Chamado aberto via bot: Opção "Suporte - Categoria: Impressora".')
                         self.condicao_op_chamado()
+                        break
                         
                 
     # Funão para Testar URL:
