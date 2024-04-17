@@ -254,13 +254,13 @@ class Menu:
                            \nOu 'Sair' para encerrar a qualquer momento.""")
         return redirect4
     
-     # Mensagem identificar se a resposta ajudou o usuário, caso sim:
-    def redirect4(self):
-        redirect4 = 1
+    # Mensagem identificar se a resposta ajudou o usuário, caso sim:
+    def redirect6(self):
+        redirect6 = 1
         self.bot.envia_msg("""Certo, por gentileza informe seu problema novamente.
                            \nSe puder detalhar melhor, para que eu possa entender a sua necessidade.
                            \nDigite 'Sair' para encerrar a qualquer momento.""")
-        return redirect4
+        return redirect6
     
     def redirect5(self):
         redirect5 = 1

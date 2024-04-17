@@ -76,52 +76,26 @@ class MainApp:
                     # Caso SUPORTE mostre as opções:           
                     elif self.retorno_suporte == "1" and self.imp == "" and self.installSoft == "":
                         
-                        self.exibe_submenu_suporte(self.msg)
-                            
-                    # Caso opção 1, envia para openai a mensagem do usuário e depois envia a mensagem de resposta da openai         
-                    elif self.retorno_suporte == "1" and self.imp == "1": 
-                                                    
-                        self.enviar_openai(self.msg)                          
-                    
-                    # Caso opção 3, pergunta ao usuário qual sistema ele quer instalar:         
-                    elif self.retorno_suporte == "1" and self.installSoft == "1":
-                        
-                        self.op_install_soft(self.msg)                                            
+                        self.exibe_submenu_suporte(self.msg)                                                                    
                                                                 
                     # -----------------------------------------------------------------------------------------------------
                     # Caso REDE mostre as opções:           
                     elif self.retorno_rede == "1" and self.netOff == "" and self.vpnOff == "" and self.pageOff == "":
                         
-                        self.exibe_submenu_rede(self.msg)
-                    
-                    # Envia a URL para testar o site:         
-                    elif self.retorno_rede == "1" and self.page_out == "1":
-                        
-                        self.testar_url(self.msg)
-                        # self.titleTicket = str('Chamado aberto via bot: Opção "Rede - Categoria: Site indisponível".' - CASO CHAMADO
-                                
+                        self.exibe_submenu_rede(self.msg)                 
+                                   
                     # -----------------------------------------------------------------------------------------------------
                     # Caso ACESSOS mostre as opções:           
                     elif self.retorno_acessos == "1" and self.changePass == "" and self.unblockPass == "" and self.blockUser == "":
                         
                         self.exibe_submenu_acessos(self.msg)
-                            
-                    # Caso opção 3 "Bloqueio usuário"
-                    elif self.retorno_acessos == "1" and self.blockUser == "1":
-                        
-                        self.bloqueio_usuario(self.msg)                                 
-                                            
+                                        
                     # -----------------------------------------------------------------------------------------------------
                     # Caso TOTVS mostre as opções:            
                     elif self.retorno_totvs == "1" and self.rError == "":
                         
                         self.exibe_submenu_totvs(self.msg)
-                            
-                    # Envia para gemini a mensagem do usuário e depois envia a mensagem de resposta da gemini         
-                    elif self.retorno_totvs == "1" and self.rError == "1":
-                        
-                        self.envia_gemini(self.msg)
-                        
+
                     # -----------------------------------------------------------------------------------------------------
                     # Caso NENHUMA DAS OPÇÕES mostre: 
                     else:
@@ -158,8 +132,7 @@ class MainApp:
             
             
     # função caso a escolha seja instalar software:
-    def op_install_soft(self, msg):
-        self.msg = msg
+    def op_install_soft(self):
         self.nova_msg = ""
         while (self.msg != "sair" or self.msg != "Sair") and self.nova_msg is not None and self.nova_msg != self.msg:
             self.pergunta = self.bot.ultima_msg()                                
@@ -168,21 +141,27 @@ class MainApp:
                 self.ret_intallSoft = self.menu.install_soft2
                 self.conct_description = str(self.ret_intallSoft + self.escolha_soft)
                 self.description.append(self.conct_description)
-                self.nova_msg = self.bot.ultima_msg()
-                self.msg = self.nova_msg
+                self.condicao_op_chamado()
+                # self.nova_msg = self.bot.ultima_msg()
+                # self.msg = self.nova_msg
 
 
     # Função para exibier submenu caso opção totvs:
     def exibe_submenu_totvs(self, msg):
         self.msg = msg
         if self.msg == "1":
+            # Caso 1 usuário preso:
             self.uslock = self.menu.user_lock()
             self.titleTicket = str('Chamado aberto via bot: Opção "Totvs - Categoria: Limite de conexão do usuário".')
         elif self.msg == "2":
+            # Caso 2 sistema travado:
             self.sysOff = self.menu.system_crash()
             self.titleTicket = str('Chamado aberto via bot: Opção "Totvs - Categoria: Sistema travado".')
         elif self.msg == "3":
+            # Caso 3 problema com rotina:
             self.rError = self.menu.routine_error()
+            self.envia_gemini()
+            self.titleTicket = str('Chamado aberto via bot: Opção "Totvs - Categoria: Problema na rotina do Protheus".')
         elif ((self.msg).lower()) == "help" or self.msg == "sair":
             self.retorno_totvs = ""
             self.msg = ""
@@ -194,13 +173,17 @@ class MainApp:
     def exibe_submenu_acessos(self, msg):
         self.msg = msg
         if self.msg == "1":
+            # Caso 1 mudar senha:
             self.changePass = self.menu.change_pass()
             self.titleTicket = str('Chamado aberto via bot: Opção "Acessos - Categoria: Troca de senha".')
         elif self.msg == "2":
+            # Caso 2 desbloqueio ou liberação:
             self.unblockPass = self.menu.unblock_pass()
             self.titleTicket = str('Chamado aberto via bot: Opção "Acessos - Categoria: Desbloquio | Liberação".')
         elif self.msg == "3":
-            self.blockUser = self.menu.block_user1()                            
+            # Caso opção 3 "Bloqueio usuário"
+            self.blockUser = self.menu.block_user1()
+            self.bloqueio_usuario()                            
         elif ((self.msg).lower()) == "help" or self.msg == "sair":
             self.retorno_suporte = ""
             self.msg = ""
@@ -212,13 +195,19 @@ class MainApp:
     def exibe_submenu_rede(self, msg):
         self.msg = msg
         if self.msg == "1":
+            # Caso 1 sem acesso a rede:
             self.netOff = self.menu.net_off()
             self.titleTicket = str('Chamado aberto via bot: Opção "Rede - Categoria: Sem acesso a internet".')
         elif self.msg == "2":
+            # Caso 2 sem acesso a vpn:
             self.anydesk = self.vpnOff = self.menu.vpn_off()
             self.titleTicket = str('Chamado aberto via bot: Opção "Rede - Categoria: Sem acesso a VPN".')
         elif self.msg == "3":
+            # Casi 3 site não funciona:
             self.page_out = self.pageOff = self.menu.page_off()
+            self.titleTicket = str('Chamado aberto via bot: Opção "Rede - Categoria: Site indisponível".')
+            # Envia a URL para testar o site:
+            self.testar_url()
         elif ((self.msg).lower()) == "help" or self.msg == "sair":
             self.retorno_rede = ""
             self.msg = ""
@@ -231,15 +220,20 @@ class MainApp:
     def exibe_submenu_suporte(self, msg):
         self.msg = msg
         if self.msg == "1":
-            self.imp = self.menu.suporte_impressora()
+            # Caso 1 problema com a impressora:
+            self.imp = self.menu.suporte_impressora()            
+            self.enviar_openai()  
         elif self.msg == "2":
+            # Caso 2 computador não liga:
             self.pcOff = self.menu.pc_nao_liga()
             self.description.append(self.pcOff)
             self.titleTicket = str('Chamado aberto via bot: Opção "Suporte - Categoria: Computador não liga".')
             self.condicao_op_chamado()
         elif self.msg == "3":
+            # Caso 3 instalar software:
             self.installSoft = self.menu.install_soft()
             self.titleTicket = str('Chamado aberto via bot: Opção "Suporte - Categoria: Intalar software".')
+            self.op_install_soft()
         elif ((self.msg).lower()) == "help" or self.msg == "sair":
             self.retorno_suporte = ""
             self.msg = ""
@@ -250,40 +244,66 @@ class MainApp:
     # Função exibir Menu:
     def exibe_menu(self, msg):
         if ((msg).lower()) == "help":
+            # Exibe o menu principal:
             self.menu.show_menu()
         elif ((msg).lower()) == "sair":
+            # Finaliza o sistema:
             self.menu.sair()
         elif ((msg).lower()) == "suporte":
+            # Exibe submenu de suporte:
             self.retorno_suporte = self.menu.suporte()
         elif ((msg).lower()) == "rede":
+            # Exibe submenu de rede:
             self.retorno_rede = self.menu.rede()
         elif ((msg).lower()) == "acessos":
+            # Exibe submenu de acessos:
             self.retorno_acessos = self.menu.acessos()
         elif ((msg).lower()) == "totvs":
+            # Exibe submenu da totvs:
             self.retorno_totvs = self.menu.totvs()
         else:
             self.menu.nenhuma_op()
             
             
     # Função para enviar a Gemini
-    def envia_gemini(self, msg):
-        self.msg = msg
-        self.nova_msg = ""
-        while (self.msg != "sair" or self.msg != "Sair") and self.nova_msg is not None and self.nova_msg != self.msg:                    
-            self.send_msg = self.msg
-            self.resposta_gemini = self.genai.iniciar_conversa(self.send_msg)
-            self.resposta_search = self.search.enviar_pergunta(self.send_msg)
-            if self.resposta_gemini != "" and self.resposta_search != "":
-                                    # retorna a resposta da openai
-                self.bot.envia_msg(self.resposta_gemini)
-                self.bot.envia_msg(self.resposta_search)
-                self.nova_msg = self.bot.ultima_msg()
-                self.msg = self.nova_msg
+    def envia_gemini(self):
+        while True:                  
+            self.send_msg = self.get_new_msg()
+            if self.send_msg != "Aguardando nova mensagem..." and self.send_msg is not None:
+                self.part1_description = ("Descrição do problema: " + self.send_msg)
+                self.resposta_gemini = self.genai.iniciar_conversa(self.send_msg)
+                self.resposta_search = self.search.enviar_pergunta(self.send_msg)
+                if self.resposta_gemini != "" and self.resposta_search != "":
+                    # retorna a resposta da openai
+                    self.part2_description = (f" Resposta IA: {self.resposta_gemini},\nLinks sugeridos: {self.resposta_search}")
+                    self.bot.envia_msg(self.resposta_gemini)
+                    sleep(2)
+                    self.bot.envia_msg(self.resposta_search)
+                    sleep(5)
+                    self.menu.redirect2()
+                    while True:
+                        self.choise = self.get_new_msg()
+                        if self.choise == "Sim":
+                            self.menu.redirect3()
+                            self.menu.redirect()
+                            self.CValues.cleanAll()
+                            self.nova_msg = self.bot.ultima_msg()
+                            self.msg = self.nova_msg
+                            break
+                        if self.choise == "Não":
+                            self.description.append(self.part1_description, self.part2_description)
+                            self.menu.redirect5()
+                            self.condicao_op_chamado()
+                            break
+                        else:
+                            self.menu.nenhuma_op()
+                        
+                    break
+                    
                 
                 
     # Função para enviar para a OpenAI
-    def enviar_openai(self, msg):
-        self.msg = msg
+    def enviar_openai(self):
         self.nova_msg = ""
         while (self.msg != "sair" or self.msg != "Sair") and self.nova_msg is not None and self.nova_msg != self.msg:                    
             if self.attemps <= 2:
@@ -319,18 +339,29 @@ class MainApp:
                         
                 
     # Funão para Testar URL:
-    def testar_url(self, msg):
-        self.msg = msg
+    def testar_url(self):
         self.nova_msg = ""
-        while self.msg != "sair" and self.nova_msg is not None and self.nova_msg != self.msg:                    
-            self.msg_link = self.msg
-            self.resposta_testUrl = test_url(self.msg_link)
-            if self.resposta_testUrl != "":
-                                    # retorna a resposta da do teste
-                self.bot.envia_msg(self.resposta_testUrl)
-                self.nova_msg = self.bot.ultima_msg()
-                self.msg = self.nova_msg
-                
+        attempts = 0
+        while self.msg != "sair" and self.nova_msg is not None and self.nova_msg != self.msg:
+            if attempts < 2:                    
+                self.msg_link = self.bot.ultima_msg()
+                if self.msg_link != "" and self.msg_link is not None:
+                    self.resposta_testUrl = test_url(self.msg_link)
+                    if self.resposta_testUrl != "":
+                        # retorna a resposta da do teste
+                        self.bot.envia_msg(self.resposta_testUrl)
+                        self.choiseImp = self.menu.redirect2()
+                        if "Sim" in self.choiseImp:
+                            self.menu.redirect3()
+                            self.menu.redirect()
+                            self.CValues.cleanAll()
+                            self.nova_msg = self.bot.ultima_msg()
+                            self.msg = self.nova_msg
+                        else:
+                            self.menu.redirect4()
+                            self.attempts =+ 1
+                            self.msg_link = ""
+                            
                 
     # FUnção para Bloquear usuário:
     def bloqueio_usuario(self, msg):
