@@ -34,7 +34,7 @@ class Openai:
 
 
 
-op = Openai()
-pergunta = input('Faça a sua pergunta: ')
-resposta = op.iniciar_conversa(pergunta)
-print(resposta)
+# op = Openai()
+# pergunta = input('Faça a sua pergunta: ')
+# resposta = op.iniciar_conversa(pergunta)
+# print(resposta)

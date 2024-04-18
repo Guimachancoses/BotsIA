@@ -1,21 +1,17 @@
 class CleanValues:
     def __init__(self):
-        self.variaveis=['self.nova_msg','self.msg','self.retorno_suporte', 'self.retorno_totvs', 'self.retorno_rede','self.retorno_acessos',
-                   'self.imp', 'self.msg_op', 'self.resposta_openai', 'self.msg_link', 'self.resposta_testUrl',
-                   'self.page_out', 'self.netOff', 'self.anydesk', 'self.vpnOff', 'self.changePass', 'self.unblockPass',
-                   'self.blockUser', 'self.username','self.password', 'self.user', 'self.attemps', 'self.motivo',
-                   'self.connection', 'self.domain', 'self.resposta_conn','self.path', 'self.resposta','self.rError',
-                   'self.uslock', 'self.sysOff', 'self.send_msg', 'self.resposta_gemini','self.resposta_search'
-                   ]
-
-
+        self.variaveis={'nova_msg':"",'msg': "",'retorno_suporte': "", 'retorno_totvs': "", 'retorno_rede': "",'retorno_acessos': "",
+                   'imp': "", 'msgOp': "", 'resposta_openai': "", 'msg_link': "", 'resposta_testUrl': "",
+                   'page_out': "", 'netOff': "", 'anydesk': "", 'vpnOff': "", 'changePass': "", 'unblockPass': "",
+                   'blockUser': "", 'username': "",'password': "", 'user': "", 'attemps': 0, 'motivo': "",
+                   'connection': "", 'domain': "", 'resposta_conn': "",'path': "", 'resposta': "",'rError': "",
+                   'uslock': "", 'sysOff': "", 'send_msg': "", 'resposta_gemini': "",'resposta_search': "",'msg_get': "",
+                   'msg_new': "", 'msg_new2': "",'msg_recebida': "", 'sendOp':"",'msg_getOp': "",'get2': "",
+        }
+    
     def cleanAll(self):
-        for variavel in self.variaveis:
-            if hasattr(self, variavel):
-                if isinstance(getattr(self, variavel), str):
-                    setattr(self, variavel, "")
-                elif isinstance(getattr(self, variavel), int):
-                    setattr(self, variavel, 0)
+        for variavel, valor_reset in self.variaveis.items():
+            setattr(self, variavel, valor_reset)
 
 # # Criando uma instância da classe LimpadorVariaveis
 # CValues = CleanValues()

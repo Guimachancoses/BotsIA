@@ -172,7 +172,7 @@ class MainApp:
             case "3":
                 # Caso opção 3 "Bloqueio usuário"
                 self.blockUser = self.menu.block_user1()
-                self.bloqueio_usuario()
+                self.bloqueio_usuario(self.msg)
             case "help":
                 self.retorno_acessos = ""                            
             case _:
@@ -225,6 +225,7 @@ class MainApp:
                 self.op_install_soft()
             case "help":
                 self.retorno_suporte = ""
+                self.exibe_menu()
             case _:
                 self.menu.nenhuma_op()
             
@@ -309,27 +310,27 @@ class MainApp:
                 if self.resposta_openai != "":
                     # retorna a resposta da openai
                     self.bot.envia_msg(self.resposta_openai)
-                    sleep(5)
-                    self.choiseImp = self.menu.redirect2()
+                    sleep(10)
                     self.menu.redirect2()
+                    pass
                     while True:
-                        self.get2 = self.msg_new2 = ""
+                        self.get2 = self.msg_new2 = self.choises =""
                         self.get2 = self.get_new_msg()
                         self.msg_new2 = self.get2
                         if (self.msg_new2 != self.sendOp and self.msg_new2 != self.choises and self.msg_new2 != "" and self.msg_new2 != "Aguardando nova mensagem..."):
-                            self.choises = self.new2
-                            if self.choises == "Sim":
+                            self.choises = ((self.msg_new2).lower())
+                            if self.choises == "sim":
                                 self.menu.redirect3()
-                                self.menu.redirect()
-                                self.CValues.cleanAll()
+                                self.limpa_volta_menu()
                                 break
-                            if self.choises == "Não":
+                            if self.choises == "não":
                                 self.description.append(self.part1_description, self.part2_description)
                                 self.menu.redirect5()
                                 self.condicao_op_chamado(self.choices)
                                 break
                             else:
                                 self.menu.nenhuma_op()
+                    break
                         
                         
                 
@@ -367,6 +368,7 @@ class MainApp:
         self.username = ""
         self.password = ""
         self.user = ""
+        self.motivo = ""
         self.attemps = 0 
         while (self.msg != "sair" or self.msg != "Sair") and self.nova_msg is not None and self.nova_msg != self.msg:   
             if self.attemps <= 2:              
@@ -386,7 +388,7 @@ class MainApp:
                     self.user = self.bot.ultima_msg()
                     self.msg = None
                     self.menu.block_user4() # Caso queria salvar no banco de dados
-                if self.password != "" and self.user != "" and self.motivo == "" and self.motivo != self.msg and self.msg is not None: 
+                if self.password != "" and self.user != "" and self.motivo == "" and self.user != self.msg and self.msg is not None: 
                     self.motivo = self.bot.ultima_msg()
                 if self.username != "" and self.password != "" and self.user != "" and self.motivo != "" and self.msg is not None: 
                     self.connection, self.domain ,self.resposta_conn = self.ldap_manager.connect(self.username, self.password)
@@ -478,7 +480,9 @@ class MainApp:
 
 
     # Função para limpar todas as variaveis e voltar ao menu principal
-    def limpa_volta_menu(self):                              
+    def limpa_volta_menu(self):
+        self.nome_variavel = ""
+        self.valor_variavel = ""                    
         self.menu.redirect()
         self.CValues.cleanAll()
         self.exibe_menu()
@@ -503,3 +507,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
