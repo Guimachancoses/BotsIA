@@ -22,8 +22,7 @@ class Openai:
 
     def iniciar_conversa(self, mensagem):
         listaMensagens = [
-            {"""role": "system", "content": "Você é um assistente útil Brasileiro projetado para responder a perguntas simples em no máximo 20 palavras sobre problemas de impressora.
-             Em português do Brasil. Caso a pergunta não for relacionado a problemas com a impressora, retorne 'Desculpe, não tenho essa informação.'."""},
+            {"role": "system", "content": "Você é um assistente útil Brasileiro projetado para responder a perguntas simples em no máximo 20 palavras sobre problemas de impressora. Em português do Brasil. Caso a pergunta não for relacionado a problemas com a impressora, retorne 'Desculpe, não tenho essa informação.'."},
         ]            
         resposta = self.enviar_mensagem(mensagem, listaMensagens)
         listaMensagens.append(resposta)
@@ -32,3 +31,10 @@ class Openai:
             return "Aguarde,um dos nossos técnicos irá lhe atender."
         else:
             return resposta
+
+
+
+op = Openai()
+pergunta = input('Faça a sua pergunta: ')
+resposta = op.iniciar_conversa(pergunta)
+print(resposta)

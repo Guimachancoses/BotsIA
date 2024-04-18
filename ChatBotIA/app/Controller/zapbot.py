@@ -184,6 +184,8 @@ class ZapBot:
                     ultimo_valor = str(lista_resposta[-1])
                     ultima_hora = lista_horas[-1]
                     
+                    hora_atual = datetime.now().strftime("%H:%M")
+                    
                     # Obtém a hora atual
                     hora_ult_msg_env, dataOut = self.hora_ultima_msg_enviada()
                     
@@ -192,6 +194,8 @@ class ZapBot:
                     if dataIn == "":
                         return None
                     if ultima_hora < hora_ult_msg_env:
+                        return None
+                    if ultima_hora < hora_atual:
                         return None
                     else:
                         return ultimo_valor
