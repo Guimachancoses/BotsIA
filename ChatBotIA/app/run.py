@@ -72,31 +72,31 @@ class MainApp:
                     # Mostra MENU principal:
                     if self.retorno_suporte == "" and self.retorno_totvs == "" and self.retorno_rede == "" and self.retorno_acessos == "":
                         
-                        self.exibe_menu(self.msg)
+                        self.verifica_op_menu(self.msg)
                     
                     # -----------------------------------------------------------------------------------------------------
                     # Caso SUPORTE mostre as opções:           
                     elif self.retorno_suporte == "1" and self.imp == "" and self.installSoft == "":
                         
-                        self.exibe_submenu_suporte(self.msg)                                                                    
+                        self.verifica_op_submenu_suporte(self.msg)                                                                    
                                                                 
                     # -----------------------------------------------------------------------------------------------------
                     # Caso REDE mostre as opções:           
                     elif self.retorno_rede == "1" and self.netOff == "" and self.vpnOff == "" and self.pageOff == "":
                         
-                        self.exibe_submenu_rede(self.msg)                 
+                        self.verifica_op_submenu_rede(self.msg)                 
                                    
                     # -----------------------------------------------------------------------------------------------------
                     # Caso ACESSOS mostre as opções:           
                     elif self.retorno_acessos == "1" and self.changePass == "" and self.unblockPass == "" and self.blockUser == "":
                         
-                        self.exibe_submenu_acessos(self.msg)
+                        self.verifica_op_submenu_acessos(self.msg)
                                         
                     # -----------------------------------------------------------------------------------------------------
                     # Caso TOTVS mostre as opções:            
                     elif self.retorno_totvs == "1" and self.rError == "":
                         
-                        self.exibe_submenu_totvs(self.msg)
+                        self.verifica_op_submenu_totvs(self.msg)
 
                     # -----------------------------------------------------------------------------------------------------
                     # Caso NENHUMA DAS OPÇÕES mostre: 
@@ -134,7 +134,7 @@ class MainApp:
 
 
     # Função para exibier submenu caso opção totvs:
-    def exibe_submenu_totvs(self, msg):
+    def verifica_op_submenu_totvs(self, msg):
         self.msg = msg
         match self.msg:
             case "1":
@@ -158,7 +158,7 @@ class MainApp:
             
             
     # Função para exibir submenu de acessos:
-    def exibe_submenu_acessos(self, msg):
+    def verifica_op_submenu_acessos(self, msg):
         self.msg = msg
         match self.msg:
             case "1":
@@ -174,6 +174,7 @@ class MainApp:
                 self.blockUser = self.menu.block_user1()
                 self.bloqueio_usuario(self.msg)
             case "help":
+                self.menu.show_menu()
                 self.retorno_acessos = ""                            
             case _:
                 self.menu.nenhuma_op()
@@ -181,7 +182,7 @@ class MainApp:
             
             
     # Função para exibir o submenu de rede:
-    def exibe_submenu_rede(self, msg):
+    def verifica_op_submenu_rede(self, msg):
         self.msg = msg
         match self.msg:
             case "1":
@@ -198,6 +199,7 @@ class MainApp:
                 self.titleTicket = str('Chamado aberto via bot: Opção "Rede - Categoria: Site indisponível".')
                 self.testar_url(self.msg)
             case "help":
+                self.menu.show_menu()
                 self.retorno_rede = ""  
             case _:
                 self.menu.nenhuma_op()
@@ -205,7 +207,7 @@ class MainApp:
     
     
     # Função exibir submenu de Suporte:
-    def exibe_submenu_suporte(self, msg):
+    def verifica_op_submenu_suporte(self, msg):
         self.msg = msg
         match self.msg:
             case "1":                
@@ -221,26 +223,23 @@ class MainApp:
             case "3":
                 # Caso 3 instalar software:
                 self.installSoft = self.menu.install_soft()
-                self.titleTicket = str('Chamado aberto via bot: Opção "Suporte - Categoria: Intalar software".')
+                self.titleTicket = str('Chamado aberto via bot: Opção "Suporte - Categoria: Instalar | Atualizar, software".')
                 self.op_install_soft()
             case "help":
                 self.retorno_suporte = ""
-                self.exibe_menu()
+                self.menu.show_menu()
             case _:
                 self.menu.nenhuma_op()
             
             
             
     # Função exibir Menu:
-    def exibe_menu(self, msg):
+    def verifica_op_menu(self, msg):
         self.msg = ((msg).lower())
         match self.msg:
             case "help":
                 # Exibe o menu principal:
                 self.menu.show_menu()
-            case "sair":
-                # Finaliza o sistema:
-                self.menu.sair()
             case "suporte":
                 # Exibe submenu de suporte:
                 self.retorno_suporte = self.menu.suporte()
@@ -259,34 +258,39 @@ class MainApp:
             
             
     # Função para enviar a Gemini
-    def envia_gemini(self):
+    def envia_gemini(self, msg):
+        self.mgsGM = msg
         while True:                  
-            self.send_msg = self.get_new_msg()
-            if self.send_msg != "Aguardando nova mensagem..." and self.send_msg is not None:
-                self.part1_description = ("Descrição do problema: " + self.send_msg)
-                self.resposta_gemini = self.genai.iniciar_conversa(self.send_msg)
-                self.resposta_search = self.search.enviar_pergunta(self.send_msg)
+            self.getGm = self.msg_newGm = self.sendGm =""
+            self.getGm = self.get_new_msg()
+            self.msg_newGm = self.getGm
+            if (self.msg_newGm != self.mgsGM and self.msg_newGm != self.choises and self.msg_newGm != "" and self.msg_newGm != "Aguardando nova mensagem..."):
+                self.sendGm = self.msg_newGm
+                self.part1_description = ("Descrição do problema: " + self.sendGm)
+                self.resposta_gemini = self.genai.iniciar_conversa(self.sendGm)
+                self.resposta_search = self.search.enviar_pergunta(self.sendGm)
                 if self.resposta_gemini != "" and self.resposta_search != "":
                     # retorna a resposta da openai
                     self.part2_description = (f" Resposta IA: {self.resposta_gemini},\nLinks sugeridos: {self.resposta_search}")
                     self.bot.envia_msg(self.resposta_gemini)
                     sleep(2)
                     self.bot.envia_msg(self.resposta_search)
-                    sleep(5)
+                    sleep(10)
                     self.menu.redirect2()
                     while True:
-                        self.choise = self.get_new_msg()
-                        if self.choise == "Sim":
+                        self.getGm2 = self.msg_newGm2 = self.choisesGm2 =""
+                        self.getGm2 = self.get_new_msg()
+                        self.msg_newGm2 = self.getGm2
+                        if (self.msg_newGm2 != self.sendGm and self.msg_newGm2 != self.choises and self.msg_newGm2 != "" and self.msg_newGm2 != "Aguardando nova mensagem..."):
+                            self.choisesGm2 = ((self.msg_newGm2).lower())
+                        if self.choiseGm2 == "Sim":
                             self.menu.redirect3()
-                            self.menu.redirect()
-                            self.CValues.cleanAll()
-                            self.nova_msg = self.bot.ultima_msg()
-                            self.msg = self.nova_msg
+                            self.limpa_volta_menu()
                             break
-                        if self.choise == "Não":
+                        if self.choiseGm2 == "Não":
                             self.description.append(self.part1_description, self.part2_description)
                             self.menu.redirect5()
-                            self.condicao_op_chamado()
+                            self.condicao_op_chamado(self.choiseGm2)
                             break
                         else:
                             self.menu.nenhuma_op()
@@ -345,7 +349,7 @@ class MainApp:
             if (self.msg_newTu != self.msg_link and self.msg_newTu != self.msgOp and self.msg_newTu != "" and self.msg_newTu != "Aguardando nova mensagem..."):
                 self.msg_link = self.msg_newTu
                 if self.resposta_testUrl == "":
-                    self.conct_descriptionTu = (self.descriptionPageOff + self.msg_link)
+                    self.conct_descriptionTu = (f"{self.descriptionPageOff} + {self.msg_link}")
                     self.description.append(self.conct_descriptionTu)
                     self.resposta_testUrl = test_url(self.msg_link)
                     # retorna a resposta da do teste
@@ -353,11 +357,13 @@ class MainApp:
                     self.menu.redirect2()
                 if self.msg_link == "Sim":
                     self.menu.redirect3()
+                    self.menu.show_menu()
                     self.limpa_volta_menu()
                     break
                 else:
                     self.menu.redirect5()
                     self.condicao_op_chamado(self.msg_link)
+                    break
                            
                             
                 
@@ -432,11 +438,12 @@ class MainApp:
         self.msg_getIs = self.get_new_msg()
         self.msg_newIs = self.msg_getIs
         if (self.msg_newIs != self.pergunta and self.msg_newIs != self.msgIs and self.msg_newIs != "" and self.msg_newIs != "Aguardando nova mensagem..."):
-            self.pergunta = self.msg_newIs                                
+            self.pergunta = self.msg_newIs
+            self.envia_num_anydesk = self.get_number_anydesk()
             self.ret_intallSoft = self.menu.install_soft2
-            self.conct_description = str(self.ret_intallSoft + self.pergunta)
+            self.conct_description = (f"{self.ret_intallSoft} + {self.pergunta} + {self.envia_num_anydesk}")
             self.description.append(self.conct_description)
-            self.condicao_op_chamado(self.pergunta)
+            self.condicao_op_chamado(self.numberAny)
             
             
     
@@ -475,6 +482,7 @@ class MainApp:
         
         mainTiflux(userNameContato, mailUserContato, userFoneContato, titleTicket, description)
         self.menu.op_ticket()
+        self.menu.show_menu()
         self.limpa_volta_menu()
 
 
@@ -485,7 +493,7 @@ class MainApp:
         self.valor_variavel = ""                    
         self.menu.redirect()
         self.CValues.cleanAll()
-        self.exibe_menu()
+        self.menu.show_menu()
 
     
     
@@ -497,6 +505,22 @@ class MainApp:
             return True
         else:
             return False
+        
+    
+    # Função para pegar o número do Anydesk:
+    def get_number_anydesk(self, msg):
+        self.msgAny = msg
+        self.description_anydesk = self.menu.number_anydesk()
+        while True:
+            self.msg_getAny = self.msg_newAny = self.numberAny = ""                
+            self.msg_getAny = self.get_new_msg()
+            self.msg_newAny = self.msg_getAny
+            if (self.msg_newAny != self.msgAny and self.msg_newAny != self.msgRc and self.msg_newAny != "" and self.msg_newAny != "Aguardando nova mensagem..."):
+                self.numberAny = self.msg_newAny
+                self.concat_number_any = (f"{self.description_anydesk} + {self.numberAny}")
+                return self.concat_number_any
+            
+    
 
 
             

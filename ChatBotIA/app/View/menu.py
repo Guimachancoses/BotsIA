@@ -47,7 +47,7 @@ class Menu:
     # Caso escolha em suporte for 3:
     def install_soft(self):
         installsoft = "1"
-        self.bot.envia_msg("Entendo, você deseja instalar um 'programa|sistema' em sua máquina.\nInforme o nome do programa.")
+        self.bot.envia_msg("Entendo, você deseja 'instalar | atualizar' um programa em sua máquina.\nInforme o nome do programa.")
         return installsoft
     
     def install_soft2(self):
@@ -288,5 +288,10 @@ class Menu:
         nenhuma_op = 1
         self.bot.envia_msg("Desculpe não entendi, você não digitou nenhuma opção válida, tente novamente.")
         return nenhuma_op
+    
+    def number_anydesk(self):
+        numberAnydesk = " O número do anydesk da máquina do usuário é :"
+        self.bot.envia_msg("Por gentileza informe o número do Anydek da sua máquina.")
+        return numberAnydesk
     
         
