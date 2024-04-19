@@ -104,7 +104,7 @@ class Menu:
     
     # Caso a escolha em acessos for 1:
     def change_pass(self):
-        changePass = "1"
+        changePass = "O usuário quer alterar a senha do: "
         self.bot.envia_msg("Entendo, você deseja aterar sua senha.\nPor gentileza informe qual a plataforma que você deseja efetuar a troca de senha?")
         return changePass
     
@@ -194,13 +194,12 @@ class Menu:
     
     # Caso escolha em suporte for 1:
     def user_lock(self):
-        uslock = "1"
+        uslock = "Usuário excedeu o limite de conexão no Protheus."
         self.bot.envia_msg("""Entendo, você está com seu usuário preso. 
                            \nVou encaminhar seu problema para um de nossos técnicos. 
                            \nPara poder reestabelecer o seu acesso é necessário reiniciar o nosso servidor da Totvs. 
                            \nPara isso peço a sua compreensão.
-                           \nTempo mínimo para resolução do seu problema 6 horas. 
-                           \nCaso exeda o tempo abra um chamado para o setor do T.I.""")
+                           \nTempo mínimo para resolução do seu problema 6 horas.""")
         return uslock
 
     # Caso escolha em suporte for 2:

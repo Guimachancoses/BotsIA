@@ -141,6 +141,8 @@ class MainApp:
                 # Caso 1 usuário preso:
                 self.uslock = self.menu.user_lock()
                 self.titleTicket = str('Chamado aberto via bot: Opção "Totvs - Categoria: Limite de conexão do usuário".')
+                self.description.append(self.uslock)
+                self.condicao_op_chamado(self.msg)
             case "2":
                 # Caso 2 sistema travado:
                 self.sysOff = self.menu.system_crash()
@@ -165,6 +167,10 @@ class MainApp:
                 # Caso 1 mudar senha:
                 self.changePass = self.menu.change_pass()
                 self.titleTicket = str('Chamado aberto via bot: Opção "Acessos - Categoria: Troca de senha".')
+                self.description_part1 = self.changePass
+                self.nameSystem = self.what_name_system()
+                self.description.append(self.nameSystem)
+                self.condicao_op_chamado(self.nameSys)
             case "2":
                 # Caso 2 desbloqueio ou liberação:
                 self.unblockPass = self.menu.unblock_pass()
@@ -505,6 +511,7 @@ class MainApp:
             return True
         else:
             return False
+    
         
     
     # Função para pegar o número do Anydesk:
@@ -520,7 +527,19 @@ class MainApp:
                 self.concat_number_any = (f"{self.description_anydesk} + {self.numberAny}")
                 return self.concat_number_any
             
+            
     
+    # Função para perguntar qual o sistema:        
+    def what_name_system(self, msg):
+        self.msgNsys = msg
+        while True:
+            self.msg_getNsys = self.msg_newNsys = self.nameSys = ""                
+            self.msg_getNsys = self.get_new_msg()
+            self.msg_newNsys = self.msg_getNsys
+            if (self.msg_newNsys != self.msgNsys and self.msg_newNsys != self.msgRc and self.msg_newNsys != "" and self.msg_newNsys != "Aguardando nova mensagem..."):
+                self.nameSys = self.msg_newNsys
+                self.concat_name_sys = (f"{self.description_part1} + {self.nameSys}")
+                return self.concat_name_sys
 
 
             
