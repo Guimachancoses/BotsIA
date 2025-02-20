@@ -1,15 +1,15 @@
 from Model.connectFlagee import FlageeConnect
 from View.executorFlagee import FlageeExecutor
-   
-def mainFlagee(username:str):
+
+
+def extractMail():
     while True:
         try:
-            user = username
             connect = FlageeConnect()
             response = connect.start_browser()
             if response is not None:
                 automator = FlageeExecutor(connect, response)
-                resposta = automator.run(user)
+                resposta = automator.run()
                 if "Status do email alterado para 'Bloqueado'!" in resposta:                   
                     # print(resposta)
                     False
@@ -18,8 +18,11 @@ def mainFlagee(username:str):
             resposta = (f"Error: {e}")
             False
             return resposta
-        
+    
+    
+    
+    
 # Caso for rodar separadamente, mova esse arquivo para fora da View            
-# if __name__ == "__main__":
-#     username = 'ederson'
-#     mainFlagee(username)
+if __name__ == "__main__":
+  
+    extractMail()

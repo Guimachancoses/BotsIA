@@ -31,3 +31,4 @@ class FlageeExecutor:
                 self.cnn.close_connection()
                 # concat = (f"{response}\n{end}")
                 return response
+
