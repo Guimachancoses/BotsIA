@@ -19,7 +19,7 @@ def mainFlagee(username:str):
             False
             return resposta
         
-#Caso for rodar separadamente, mova esse arquivo para fora da View            
-if __name__ == "__main__":
-    username = 'guilherme'
-    mainFlagee(username)
+# #Caso for rodar separadamente, mova esse arquivo para fora da View            
+# if __name__ == "__main__":
+#     username = 'guilherme'
+#     mainFlagee(username)

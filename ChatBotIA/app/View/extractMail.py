@@ -23,6 +23,6 @@ def extractMail():
     
     
 # Caso for rodar separadamente, mova esse arquivo para fora da View            
-if __name__ == "__main__":
+# if __name__ == "__main__":
   
-    extractMail()
+#     extractMail()

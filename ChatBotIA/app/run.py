@@ -25,7 +25,7 @@ class MainApp:
         self.bot = self.menu.bot
         self.bot.abre_conversa("+55 19 98228-0312")
         self.userNameContato, self.userFoneContato = self.bot.get_data_user()
-        self.bot.envia_msg(f"⚡⛑ Olá, {self.userNameContato}. Sou Guilherme! Para receber ajuda digite: help ⛑⚡")
+        #self.bot.envia_msg(f"⚡⛑ Olá, {self.userNameContato}. Sou Guilherme! Para receber ajuda digite: help ⛑⚡")
         self.imagem = self.bot.dir_path + "/Python-Programs/botOpenai/app/image.jpg"
         self.msg = ""
         # váriaveis das opções de suporte:        
