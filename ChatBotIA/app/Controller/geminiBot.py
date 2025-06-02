@@ -4,8 +4,8 @@ from Controller.googleSearchBot import PesquisaGoogle
 
 class Gemini:
     def __init__(self):
-        self.project_id = "geminibot-419111"
-        self.location = "us-central1"
+        self.project_id = "PROJECT-ID"
+        self.location = "LOCAL"
         vertexai.init(project=self.project_id, location=self.location)
         self.model = GenerativeModel("gemini-1.0-pro")
         self.search =  PesquisaGoogle()
